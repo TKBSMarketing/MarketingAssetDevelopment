@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "obsidian": {
+      "command": "npx",
+      "args": ["-y", "obsidian-mcp", "C:\\Users\\joshh\\Documents\\Obsidian Vault"]
+    }
+  }
+}
+

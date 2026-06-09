@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Astro Paws -- Card Fan + Feature Bullets (1200x628)</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap');
+
+  .ad {
+    width: 1200px;
+    height: 628px;
+    background: #1a1d2e;
+    position: relative;
+    overflow: hidden;
+    font-family: 'Nunito', sans-serif;
+    display: flex;
+  }
+
+  /* Starfield on left panel */
+  .left-panel::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(1px 1px at 8% 12%, rgba(255,255,255,0.8), transparent),
+      radial-gradient(1px 1px at 22% 45%, rgba(255,255,255,0.6), transparent),
+      radial-gradient(1.5px 1.5px at 48% 8%, rgba(255,255,255,0.9), transparent),
+      radial-gradient(1px 1px at 65% 35%, rgba(255,255,255,0.5), transparent),
+      radial-gradient(1px 1px at 80% 65%, rgba(255,255,255,0.7), transparent),
+      radial-gradient(1.5px 1.5px at 12% 78%, rgba(255,255,255,0.6), transparent),
+      radial-gradient(1px 1px at 38% 88%, rgba(255,255,255,0.8), transparent),
+      radial-gradient(1px 1px at 55% 55%, rgba(255,255,255,0.4), transparent),
+      radial-gradient(1px 1px at 90% 18%, rgba(255,255,255,0.7), transparent),
+      radial-gradient(1px 1px at 3% 40%, rgba(255,255,255,0.5), transparent);
+    z-index: 0;
+  }
+
+  .left-panel {
+    width: 55%;
+    position: relative;
+    background: #1a1d2e;
+  }
+
+  /* Nebula glow */
+  .left-panel::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 30% 70%, rgba(74,127,181,0.1) 0%, transparent 60%);
+    z-index: 0;
+  }
+
+  .right-panel {
+    width: 45%;
+    background: linear-gradient(180deg, #232840 0%, #1e2238 100%);
+    padding: 40px 45px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    border-left: 2px solid rgba(255,255,255,0.05);
+  }
+
+  .card-fan {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 5;
+  }
+
+  .card {
+    position: absolute;
+    width: 220px;
+    height: 310px;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.6), 0 0 15px rgba(74,127,181,0.15);
+  }
+
+  .card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .card-1 { left: -240px; top: -130px; transform: rotate(-10deg); z-index: 1; }
+  .card-2 { left: -110px; top: -155px; transform: rotate(0deg); z-index: 3; }
+  .card-3 { left: 20px; top: -130px; transform: rotate(10deg); z-index: 2; }
+
+  .card-2 {
+    box-shadow: 0 8px 25px rgba(0,0,0,0.6), 0 0 30px rgba(212,90,58,0.25);
+  }
+
+  .logo {
+    font-size: 44px;
+    font-weight: 900;
+    color: #ffffff;
+    text-shadow: 0 0 20px rgba(74,127,181,0.4);
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+
+  .logo-sub {
+    font-size: 15px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.5);
+    text-transform: uppercase;
+    letter-spacing: 6px;
+    margin-bottom: 30px;
+  }
+
+  .features {
+    list-style: none;
+    margin-bottom: 30px;
+  }
+
+  .features li {
+    font-size: 22px;
+    font-weight: 700;
+    color: #ffffff;
+    padding: 10px 0;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .features li:last-child {
+    border-bottom: none;
+  }
+
+  .feature-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .icon-players { background: rgba(74,127,181,0.2); color: #4a7fb5; }
+  .icon-time { background: rgba(232,160,48,0.2); color: #e8a030; }
+  .icon-easy { background: rgba(58,138,74,0.2); color: #3a8a4a; }
+  .icon-pocket { background: rgba(138,90,176,0.2); color: #8a5ab0; }
+  .icon-age { background: rgba(212,90,58,0.2); color: #d45a3a; }
+
+  .cta-button {
+    display: inline-block;
+    background: linear-gradient(135deg, #05ce78 0%, #04b86b 100%);
+    color: white;
+    font-size: 18px;
+    font-weight: 900;
+    padding: 14px 28px;
+    border-radius: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(5,206,120,0.3);
+  }
+
+  .micromay-corner {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: #f5c518;
+    color: #1a1d2e;
+    font-size: 13px;
+    font-weight: 900;
+    padding: 6px 14px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+</style>
+</head>
+<body>
+<div class="ad">
+  <div class="left-panel">
+    <div class="card-fan">
+      <div class="card card-1"><img src="../../assets/cards/blue/1 Play Here - Blue.jpg" alt="Blue Cat"></div>
+      <div class="card card-2"><img src="../../assets/cards/red/1 Play Here - Red.jpg" alt="Red Panda"></div>
+      <div class="card card-3"><img src="../../assets/cards/yellow/1 Play Here - Yellow.jpg" alt="Yellow Fox"></div>
+    </div>
+  </div>
+
+  <div class="right-panel">
+    <div class="micromay-corner">#MicroMay</div>
+    <div class="logo">Astro Paws</div>
+    <div class="logo-sub">Card Game</div>
+
+    <ul class="features">
+      <li><span class="feature-icon icon-players">&#9734;</span> 2-5 Players</li>
+      <li><span class="feature-icon icon-time">&#9202;</span> 15-Minute Games</li>
+      <li><span class="feature-icon icon-easy">&#10003;</span> Easy to Learn</li>
+      <li><span class="feature-icon icon-pocket">&#9992;</span> Fits in Your Pocket</li>
+      <li><span class="feature-icon icon-age">&#9829;</span> Ages 8+</li>
+    </ul>
+
+    <div class="cta-button">Get Notified on Kickstarter</div>
+  </div>
+</div>
+</body>
+</html>

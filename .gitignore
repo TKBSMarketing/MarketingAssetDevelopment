@@ -1,0 +1,64 @@
+# Images
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.bmp
+*.svg
+*.webp
+*.ico
+*.tiff
+*.tif
+
+# PDFs
+*.pdf
+
+# Large/binary assets
+*.psd
+*.ai
+*.sketch
+*.fig
+*.eps
+*.raw
+*.cr2
+*.nef
+
+# Video
+*.mp4
+*.mov
+*.avi
+*.wmv
+*.webm
+*.mkv
+
+# Audio
+*.mp3
+*.wav
+*.ogg
+*.flac
+
+# Environment / secrets
+.env
+*.env
+
+# OS files
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# Original asset folder
+Version 8/
+
+# Dependencies & Python build artifacts
+node_modules/
+__pycache__/
+*.pyc
+
+# Vendored / reinstallable tooling (keep .claude/settings.json, drop the skills)
+.agents/
+.claude/skills/
+
+# Exception: the Remotion project's small brand assets (logo + CC-BY music)
+# are needed to render, so re-include them despite the media rules above.
+!FoundationsTreeExperts/video-ads/public/
+!FoundationsTreeExperts/video-ads/public/**

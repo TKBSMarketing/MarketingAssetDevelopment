@@ -1,0 +1,143 @@
+﻿=== ALL ACTION TYPES ACROSS ALL CAMPAIGNS (90 days) ===
+
+============================================================
+  MARCH TOF 4.6.26 (OUTCOME_LEADS)
+    comment: 4
+    landing_page_view: 844
+    lead: 19 <-- CONVERSION EVENT
+    like: 10
+    link_click: 1199
+    offsite_conversion.fb_pixel_custom: 19 <-- CONVERSION EVENT
+    offsite_conversion.fb_pixel_lead: 19 <-- CONVERSION EVENT
+    offsite_lead_add_20_s_calls: 19 <-- CONVERSION EVENT
+    omni_landing_page_view: 844
+    onsite_conversion.messaging_conversation_replied_7d: 1 <-- CONVERSION EVENT
+    onsite_conversion.messaging_conversation_started_7d: 3 <-- CONVERSION EVENT
+    onsite_conversion.messaging_first_reply: 2 <-- CONVERSION EVENT
+    onsite_conversion.post_net_comment: 4 <-- CONVERSION EVENT
+    onsite_conversion.post_net_like: 164 <-- CONVERSION EVENT
+    onsite_conversion.post_net_save: 28 <-- CONVERSION EVENT
+    onsite_conversion.post_save: 28 <-- CONVERSION EVENT
+    onsite_conversion.post_unlike: 12 <-- CONVERSION EVENT
+    onsite_conversion.total_messaging_connection: 3 <-- CONVERSION EVENT
+    onsite_web_lead: 19 <-- CONVERSION EVENT
+    page_engagement: 22209
+    post: 10
+    post_engagement: 22199
+    post_interaction_gross: 218
+    post_interaction_net: 230
+    post_reaction: 176
+    video_view: 20782
+
+  CONVERSION COSTS:
+    offsite_submit_application_add_meta_leads: $134.22
+    offsite_conversion.fb_pixel_custom: $127.15
+    offsite_lead_add_20_s_calls: $127.15
+    onsite_web_lead: $127.15
+    onsite_conversion.total_messaging_connection: $805.31
+    onsite_conversion.messaging_conversation_replied_7d: $2415.93
+    lead: $127.15
+    offsite_contact_website_add_meta_leads: $2415.93
+    onsite_conversion.messaging_first_reply: $1207.96
+    onsite_conversion.messaging_conversation_started_7d: $805.31
+
+============================================================
+  MOF Retargeting Campaign 3/15/26 (LINK_CLICKS)
+    comment: 2
+    landing_page_view: 754
+    link_click: 941
+    omni_landing_page_view: 754
+    onsite_conversion.messaging_block: 2 <-- CONVERSION EVENT
+    onsite_conversion.post_net_comment: 2 <-- CONVERSION EVENT
+    onsite_conversion.post_net_like: 29 <-- CONVERSION EVENT
+    onsite_conversion.post_net_save: 4 <-- CONVERSION EVENT
+    onsite_conversion.post_save: 4 <-- CONVERSION EVENT
+    onsite_conversion.post_unlike: 3 <-- CONVERSION EVENT
+    page_engagement: 10982
+    post: 1
+    post_engagement: 10982
+    post_interaction_gross: 39
+    post_interaction_net: 42
+    post_reaction: 32
+    video_view: 10002
+
+============================================================
+  APRIL TOF 4.8.26 (OUTCOME_LEADS)
+    comment: 1
+    landing_page_view: 217
+    link_click: 413
+    omni_landing_page_view: 217
+    onsite_conversion.post_net_comment: 1 <-- CONVERSION EVENT
+    onsite_conversion.post_net_like: 46 <-- CONVERSION EVENT
+    onsite_conversion.post_net_save: 3 <-- CONVERSION EVENT
+    onsite_conversion.post_save: 3 <-- CONVERSION EVENT
+    onsite_conversion.post_unlike: 3 <-- CONVERSION EVENT
+    page_engagement: 15105
+    post: 2
+    post_engagement: 15105
+    post_interaction_gross: 55
+    post_interaction_net: 58
+    post_reaction: 49
+    video_view: 14637
+
+============================================================
+  TKBS/FTE/Leads/Lookalike/Dyn (OUTCOME_LEADS)
+    landing_page_view: 15
+    link_click: 23
+    offsite_conversion.fb_pixel_custom: 1 <-- CONVERSION EVENT
+    omni_landing_page_view: 15
+    onsite_conversion.post_net_like: 5 <-- CONVERSION EVENT
+    page_engagement: 29
+    post_engagement: 29
+    post_interaction_gross: 5
+    post_interaction_net: 5
+    post_reaction: 5
+    video_view: 1
+
+  CONVERSION COSTS:
+    offsite_conversion.fb_pixel_custom: $33.17
+
+
+============================================================
+ALL UNIQUE ACTION TYPES FOUND:
+  comment
+  landing_page_view
+  lead <-- POTENTIAL CONVERSION
+  like
+  link_click
+  offsite_conversion.fb_pixel_custom <-- POTENTIAL CONVERSION
+  offsite_conversion.fb_pixel_lead <-- POTENTIAL CONVERSION
+  offsite_lead_add_20_s_calls <-- POTENTIAL CONVERSION
+  omni_landing_page_view
+  onsite_conversion.messaging_block <-- POTENTIAL CONVERSION
+  onsite_conversion.messaging_conversation_replied_7d <-- POTENTIAL CONVERSION
+  onsite_conversion.messaging_conversation_started_7d <-- POTENTIAL CONVERSION
+  onsite_conversion.messaging_first_reply <-- POTENTIAL CONVERSION
+  onsite_conversion.post_net_comment <-- POTENTIAL CONVERSION
+  onsite_conversion.post_net_like <-- POTENTIAL CONVERSION
+  onsite_conversion.post_net_save <-- POTENTIAL CONVERSION
+  onsite_conversion.post_save <-- POTENTIAL CONVERSION
+  onsite_conversion.post_unlike <-- POTENTIAL CONVERSION
+  onsite_conversion.total_messaging_connection <-- POTENTIAL CONVERSION
+  onsite_web_lead <-- POTENTIAL CONVERSION
+  page_engagement
+  post
+  post_engagement
+  post_interaction_gross
+  post_interaction_net
+  post_reaction
+  video_view
+
+
+============================================================
+=== OFFSITE CONVERSION BREAKDOWN ===
+
+  MARCH TOF 4.6.26:
+    lead: 19
+    offsite_conversion.fb_pixel_custom: 19
+    offsite_conversion.fb_pixel_lead: 19
+    offsite_lead_add_20_s_calls: 19
+    onsite_web_lead: 19
+
+  TKBS/FTE/Leads/Lookalike/Dyn:
+    offsite_conversion.fb_pixel_custom: 1

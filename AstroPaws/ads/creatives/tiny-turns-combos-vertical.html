@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Astro Paws -- Tiny Turns. Massive Combos. (1080x1920)</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap');
+
+  .ad {
+    width: 1080px;
+    height: 1920px;
+    background: #161929;
+    position: relative;
+    overflow: hidden;
+    font-family: 'Nunito', sans-serif;
+  }
+
+  /* Starfield */
+  .ad::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(2px 2px at 8% 6%, rgba(255,255,255,0.85), transparent),
+      radial-gradient(1.5px 1.5px at 22% 14%, rgba(255,255,255,0.55), transparent),
+      radial-gradient(2px 2px at 50% 4%, rgba(255,255,255,0.9), transparent),
+      radial-gradient(1.5px 1.5px at 73% 10%, rgba(255,255,255,0.6), transparent),
+      radial-gradient(1.5px 1.5px at 90% 16%, rgba(255,255,255,0.7), transparent),
+      radial-gradient(1.5px 1.5px at 5% 30%, rgba(255,255,255,0.5), transparent),
+      radial-gradient(2px 2px at 95% 34%, rgba(255,255,255,0.7), transparent),
+      radial-gradient(1.5px 1.5px at 14% 52%, rgba(255,255,255,0.55), transparent),
+      radial-gradient(1.5px 1.5px at 88% 56%, rgba(255,255,255,0.6), transparent),
+      radial-gradient(2px 2px at 6% 70%, rgba(255,255,255,0.65), transparent),
+      radial-gradient(1.5px 1.5px at 94% 72%, rgba(255,255,255,0.55), transparent),
+      radial-gradient(1.5px 1.5px at 20% 82%, rgba(255,255,255,0.5), transparent),
+      radial-gradient(2px 2px at 78% 86%, rgba(255,255,255,0.7), transparent),
+      radial-gradient(1.5px 1.5px at 48% 90%, rgba(255,255,255,0.55), transparent),
+      radial-gradient(1.5px 1.5px at 35% 38%, rgba(255,255,255,0.4), transparent),
+      radial-gradient(1.5px 1.5px at 64% 66%, rgba(255,255,255,0.45), transparent);
+    z-index: 0;
+  }
+
+  /* Nebula glow */
+  .ad::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 22% 60%, rgba(74,127,181,0.14) 0%, transparent 55%),
+      radial-gradient(ellipse at 82% 40%, rgba(138,90,176,0.13) 0%, transparent 55%),
+      radial-gradient(ellipse at 50% 95%, rgba(212,90,58,0.10) 0%, transparent 50%);
+    z-index: 0;
+  }
+
+  /* ---- Header ---- */
+  .header {
+    position: absolute;
+    top: 96px;
+    left: 0; right: 0;
+    text-align: center;
+    z-index: 10;
+  }
+
+  .logo-text {
+    font-size: 64px;
+    font-weight: 900;
+    color: #ffffff;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    text-shadow: 0 0 28px rgba(74,127,181,0.5), 0 2px 4px rgba(0,0,0,0.5);
+  }
+
+  .logo-sub {
+    font-size: 22px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.6);
+    letter-spacing: 12px;
+    text-transform: uppercase;
+    margin-top: 6px;
+  }
+
+  /* ---- Headline ---- */
+  .headline {
+    position: absolute;
+    top: 250px;
+    left: 0; right: 0;
+    text-align: center;
+    z-index: 10;
+    padding: 0 60px;
+  }
+
+  .headline .line1 {
+    font-size: 108px;
+    font-weight: 900;
+    color: #ffffff;
+    line-height: 1.0;
+    letter-spacing: 1px;
+    text-shadow: 0 4px 18px rgba(0,0,0,0.6);
+  }
+
+  .headline .line2 {
+    font-size: 108px;
+    font-weight: 900;
+    line-height: 1.0;
+    letter-spacing: 1px;
+    background: linear-gradient(135deg, #f5c518 0%, #f0962a 55%, #d45a3a 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 4px 24px rgba(240,150,42,0.25);
+  }
+
+  .subhead {
+    margin-top: 26px;
+    font-size: 38px;
+    font-weight: 800;
+    color: rgba(255,255,255,0.82);
+    letter-spacing: 0.4px;
+  }
+
+  /* ---- Card cascade ---- */
+  .card-stage {
+    position: absolute;
+    top: 560px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1080px;
+    height: 1040px;
+    z-index: 5;
+  }
+
+  .card {
+    position: absolute;
+    width: 420px;
+    height: 595px;
+    border-radius: 26px;
+    overflow: hidden;
+    box-shadow: 0 18px 50px rgba(0,0,0,0.6), 0 0 30px rgba(74,127,181,0.22);
+    border: 3px solid rgba(255,255,255,0.06);
+  }
+  .card img { width: 100%; height: 100%; object-fit: cover; }
+
+  /* fanned cascade, red panda front/center */
+  .c-back-l { left: 70px;  top: 250px; transform: rotate(-16deg) scale(0.84); z-index: 1; opacity: 0.96; }
+  .c-back-r { left: 600px; top: 250px; transform: rotate(16deg)  scale(0.84); z-index: 1; opacity: 0.96; }
+  .c-mid-l  { left: 200px; top: 120px; transform: rotate(-8deg)  scale(0.93); z-index: 2; }
+  .c-mid-r  { left: 480px; top: 120px; transform: rotate(8deg)   scale(0.93); z-index: 2; }
+  .c-front  { left: 330px; top: 30px;  transform: rotate(0deg);  z-index: 5;
+              box-shadow: 0 22px 60px rgba(0,0,0,0.65), 0 0 50px rgba(212,90,58,0.38);
+              border-color: rgba(255,255,255,0.10); }
+
+  /* combo glyphs between cards */
+  .combo-badge {
+    position: absolute;
+    z-index: 8;
+    width: 96px; height: 96px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #05ce78 0%, #04b86b 100%);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 64px; font-weight: 900; color: #ffffff;
+    box-shadow: 0 10px 26px rgba(5,206,120,0.45), 0 0 0 8px rgba(5,206,120,0.12);
+    line-height: 1;
+  }
+  .badge-l { left: 250px; top: 470px; }
+  .badge-r { left: 730px; top: 470px; }
+
+  /* ---- Footer CTA ---- */
+  .cta-bar {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 150px;
+    background: linear-gradient(135deg, #05ce78 0%, #04b86b 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+  }
+  .cta-text {
+    font-size: 56px;
+    font-weight: 900;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+    text-shadow: 0 2px 3px rgba(0,0,0,0.18);
+  }
+  .cta-sub {
+    font-size: 26px;
+    font-weight: 800;
+    color: rgba(255,255,255,0.92);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+</style>
+</head>
+<body>
+<div class="ad">
+  <div class="header">
+    <div class="logo-text">Astro Paws</div>
+    <div class="logo-sub">Card Game</div>
+  </div>
+
+  <div class="headline">
+    <div class="line1">Tiny Turns.</div>
+    <div class="line2">Massive Combos.</div>
+    <div class="subhead">Play one card. Trigger galaxy-sized chaos.</div>
+  </div>
+
+  <div class="card-stage">
+    <div class="card c-back-l"><img src="../../assets/cards/green/1 Play Here - Green.jpg" alt="Green"></div>
+    <div class="card c-back-r"><img src="../../assets/cards/purple/1 Play Here - Purple.jpg" alt="Purple"></div>
+    <div class="card c-mid-l"><img src="../../assets/cards/blue/1 Play Here - Blue.jpg" alt="Blue"></div>
+    <div class="card c-mid-r"><img src="../../assets/cards/yellow/1 Play Here - Yellow.jpg" alt="Yellow"></div>
+    <div class="card c-front"><img src="../../assets/cards/red/1 Play Here - Red.jpg" alt="Red panda"></div>
+
+    <div class="combo-badge badge-l">+</div>
+    <div class="combo-badge badge-r">+</div>
+  </div>
+
+  <div class="cta-bar">
+    <div class="cta-text">Back Us on Kickstarter</div>
+    <div class="cta-sub">2-5 Players &middot; 15 Min &middot; Ages 8+</div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Astro Paws -- Hero Character Lineup (1080x1080)</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700;900&display=swap');
+
+  .ad {
+    width: 1080px;
+    height: 1080px;
+    background: #1a1d2e;
+    position: relative;
+    overflow: hidden;
+    font-family: 'Nunito', sans-serif;
+  }
+
+  /* Starfield */
+  .ad::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(1px 1px at 10% 15%, rgba(255,255,255,0.8), transparent),
+      radial-gradient(1px 1px at 25% 40%, rgba(255,255,255,0.6), transparent),
+      radial-gradient(1.5px 1.5px at 50% 10%, rgba(255,255,255,0.9), transparent),
+      radial-gradient(1px 1px at 70% 30%, rgba(255,255,255,0.5), transparent),
+      radial-gradient(1px 1px at 85% 60%, rgba(255,255,255,0.7), transparent),
+      radial-gradient(1.5px 1.5px at 15% 75%, rgba(255,255,255,0.6), transparent),
+      radial-gradient(1px 1px at 40% 85%, rgba(255,255,255,0.8), transparent),
+      radial-gradient(1px 1px at 60% 70%, rgba(255,255,255,0.5), transparent),
+      radial-gradient(1.5px 1.5px at 90% 20%, rgba(255,255,255,0.7), transparent),
+      radial-gradient(1px 1px at 5% 50%, rgba(255,255,255,0.6), transparent),
+      radial-gradient(1px 1px at 35% 25%, rgba(255,255,255,0.4), transparent),
+      radial-gradient(1px 1px at 75% 80%, rgba(255,255,255,0.6), transparent),
+      radial-gradient(1.5px 1.5px at 55% 45%, rgba(255,255,255,0.5), transparent),
+      radial-gradient(1px 1px at 20% 90%, rgba(255,255,255,0.7), transparent),
+      radial-gradient(1px 1px at 80% 5%, rgba(255,255,255,0.8), transparent),
+      radial-gradient(1px 1px at 45% 55%, rgba(255,255,255,0.4), transparent),
+      radial-gradient(1.5px 1.5px at 95% 85%, rgba(255,255,255,0.6), transparent),
+      radial-gradient(1px 1px at 30% 65%, rgba(255,255,255,0.5), transparent);
+    z-index: 0;
+  }
+
+  /* Subtle nebula glow */
+  .ad::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 80%, rgba(74,127,181,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, rgba(138,90,176,0.08) 0%, transparent 60%);
+    z-index: 0;
+  }
+
+  .logo-area {
+    position: absolute;
+    top: 40px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    z-index: 10;
+  }
+
+  .logo-text {
+    font-size: 72px;
+    font-weight: 900;
+    color: #ffffff;
+    text-shadow: 0 0 30px rgba(74,127,181,0.5), 0 2px 4px rgba(0,0,0,0.5);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+  }
+
+  .logo-sub {
+    font-size: 24px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.7);
+    letter-spacing: 8px;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  .card-fan {
+    position: absolute;
+    top: 200px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 900px;
+    height: 580px;
+    z-index: 5;
+  }
+
+  .card {
+    position: absolute;
+    width: 260px;
+    height: 370px;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.6), 0 0 20px rgba(74,127,181,0.2);
+    transition: transform 0.3s;
+  }
+
+  .card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .card-1 { left: 0; top: 60px; transform: rotate(-12deg); z-index: 1; }
+  .card-2 { left: 130px; top: 20px; transform: rotate(-6deg); z-index: 2; }
+  .card-3 { left: 310px; top: 0; transform: rotate(0deg); z-index: 5; }
+  .card-4 { left: 490px; top: 20px; transform: rotate(6deg); z-index: 2; }
+  .card-5 { left: 620px; top: 60px; transform: rotate(12deg); z-index: 1; }
+
+  /* Red panda (center) gets extra glow */
+  .card-3 {
+    box-shadow: 0 8px 30px rgba(0,0,0,0.6), 0 0 40px rgba(212,90,58,0.3);
+  }
+
+  .tagline {
+    position: absolute;
+    bottom: 130px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    z-index: 10;
+  }
+
+  .tagline-text {
+    font-size: 42px;
+    font-weight: 900;
+    color: #ffffff;
+    text-shadow: 0 0 20px rgba(0,0,0,0.8), 0 2px 4px rgba(0,0,0,0.5);
+    letter-spacing: 1px;
+  }
+
+  .cta-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    background: linear-gradient(135deg, #05ce78 0%, #04b86b 100%);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    z-index: 10;
+  }
+
+  .cta-text {
+    font-size: 28px;
+    font-weight: 900;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+
+  .micromay-badge {
+    background: #f5c518;
+    color: #1a1d2e;
+    font-size: 18px;
+    font-weight: 900;
+    padding: 8px 20px;
+    border-radius: 6px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+</style>
+</head>
+<body>
+<div class="ad">
+  <div class="logo-area">
+    <div class="logo-text">Astro Paws</div>
+    <div class="logo-sub">Card Game</div>
+  </div>
+
+  <div class="card-fan">
+    <div class="card card-1"><img src="../../assets/cards/green/1 Play Here - Green.jpg" alt="Green Cat"></div>
+    <div class="card card-2"><img src="../../assets/cards/blue/1 Play Here - Blue.jpg" alt="Blue Cat"></div>
+    <div class="card card-3"><img src="../../assets/cards/red/1 Play Here - Red.jpg" alt="Red Panda"></div>
+    <div class="card card-4"><img src="../../assets/cards/yellow/1 Play Here - Yellow.jpg" alt="Yellow Fox"></div>
+    <div class="card card-5"><img src="../../assets/cards/purple/1 Play Here - Purple.jpg" alt="Purple Cat"></div>
+  </div>
+
+  <div class="tagline">
+    <div class="tagline-text">The Cutest Card Game in Space</div>
+  </div>
+
+  <div class="cta-bar">
+    <span class="cta-text">Coming to Kickstarter</span>
+    <span class="micromay-badge">#MicroMay</span>
+  </div>
+</div>
+</body>
+</html>

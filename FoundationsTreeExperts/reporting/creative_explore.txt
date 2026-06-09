@@ -1,0 +1,92 @@
+﻿=== AD-LEVEL INSIGHTS ===
+  Spring reel 1 (ID: 120243104491270351)
+    Campaign: APRIL TOF 4.8.26 | Ad Set: APRIL TOF INT: (256,300 - 301,500)
+    Spend: $100.67 | Clicks: 99 | Link Clicks: 82
+  David Reel 2 (ID: 120243104241420351)
+    Campaign: APRIL TOF 4.8.26 | Ad Set: APRIL TOF INT: (256,300 - 301,500)
+    Spend: $81.03 | Clicks: 80 | Link Clicks: 63
+  Static: David Team 2 (ID: 120243104241400351)
+    Campaign: APRIL TOF 4.8.26 | Ad Set: APRIL TOF INT: (256,300 - 301,500)
+    Spend: $50.33 | Clicks: 65 | Link Clicks: 30
+  Testimonial 2 (ID: 120241741474950351)
+    Campaign: MOF Retargeting Campaign 3/15/26 | Ad Set: Testimonial 2
+    Spend: $46.18 | Clicks: 379 | Link Clicks: 231
+  Testimonial 3 (ID: 120241741493470351)
+    Campaign: MOF Retargeting Campaign 3/15/26 | Ad Set: Testimonial 3
+    Spend: $39.25 | Clicks: 174 | Link Clicks: 122
+  Testimonial 1 (ID: 120241741450240351)
+    Campaign: MOF Retargeting Campaign 3/15/26 | Ad Set: Testimonial 1
+    Spend: $38.31 | Clicks: 184 | Link Clicks: 130
+  Images (ID: 120245816151490351)
+    Campaign: TKBS/FTE/Leads/Lookalike/Dyn | Ad Set: Lookalike FTE Facebook + Page Visitors
+    Spend: $21.97 | Clicks: 29 | Link Clicks: 19
+  Spring reel 3 (ID: 120243104559430351)
+    Campaign: APRIL TOF 4.8.26 | Ad Set: APRIL TOF INT: (256,300 - 301,500)
+    Spend: $12.89 | Clicks: 13 | Link Clicks: 13
+
+=== AD CREATIVE DETAILS ===
+
+  Ad: Spring reel 1 (ID: 120243104491270351)
+    Thumbnail: https://scontent-det1-1.xx.fbcdn.net/v/t15.5256-10/667740184_1920337708615378_26
+    Image URL: None
+    Image Hash: None
+    Video ID: 1732385464838506
+    Asset Feed: 0 images, 0 videos
+
+  Ad: David Reel 2 (ID: 120243104241420351)
+    Thumbnail: https://scontent-det1-1.xx.fbcdn.net/v/t15.5256-10/646273406_1230832819177521_60
+    Image URL: None
+    Image Hash: None
+    Video ID: 1899641497341286
+    Asset Feed: 0 images, 0 videos
+
+  Ad: Static: David Team 2 (ID: 120243104241400351)
+    Thumbnail: https://scontent-det1-1.xx.fbcdn.net/v/t45.1600-4/648111764_10174433519980193_75
+    Image URL: None
+    Image Hash: None
+    Video ID: None
+    Asset Feed: 4 images, 0 videos
+      Image hash: 1c8034bf4e01d649a7a289faa420f53c | URL: N/A
+      Image hash: 1c8034bf4e01d649a7a289faa420f53c | URL: N/A
+      Image hash: 1c8034bf4e01d649a7a289faa420f53c | URL: N/A
+      Image hash: 1c8034bf4e01d649a7a289faa420f53c | URL: N/A
+
+  Ad: Testimonial 2 (ID: 120241741474950351)
+    Thumbnail: https://scontent-det1-1.xx.fbcdn.net/v/t15.5256-10/651779704_929998562766571_422
+    Image URL: None
+    Image Hash: None
+    Video ID: 909369048803594
+
+  Ad: Testimonial 3 (ID: 120241741493470351)
+    Thumbnail: https://scontent-det1-1.xx.fbcdn.net/v/t39.30808-1/669298834_1422100733292466_66
+    Image URL: None
+    Image Hash: None
+    Video ID: None
+
+  Ad: Testimonial 1 (ID: 120241741450240351)
+    Thumbnail: https://scontent-det1-1.xx.fbcdn.net/v/t15.5256-10/652798152_1879146276375828_60
+    Image URL: None
+    Image Hash: None
+    Video ID: 844077281554045
+
+  Ad: Images (ID: 120245816151490351)
+    Thumbnail: https://scontent-det1-1.xx.fbcdn.net/v/t45.1600-4/695247923_27506713352247559_55
+    Image URL: None
+    Image Hash: None
+    Video ID: None
+    Asset Feed: 6 images, 0 videos
+      Image hash: 8a21d99c751fe531ae93b551c9395dd7 | URL: N/A
+      Image hash: ca986eed80e7c08991d98d78a10532cf | URL: N/A
+      Image hash: 95b9d28b590967521e0217f84ead4de5 | URL: N/A
+      Image hash: c2a53cdb11450ad6b064a5800c9664ef | URL: N/A
+      Image hash: d896cd3c24fa75f497e9291e55a2a8c9 | URL: N/A
+
+  Ad: Spring reel 3 (ID: 120243104559430351)
+    Thumbnail: https://scontent-det1-1.xx.fbcdn.net/v/t15.5256-10/668936804_922345063923147_410
+    Image URL: None
+    Image Hash: None
+    Video ID: 1435998071039673
+    Asset Feed: 0 images, 0 videos
+
+=== IMAGE ASSET BREAKDOWN (with ad_name) ===
+0 rows

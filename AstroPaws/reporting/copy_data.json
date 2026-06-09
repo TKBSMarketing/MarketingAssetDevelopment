@@ -1,0 +1,788 @@
+﻿
+=== BODY_ASSET BREAKDOWN ===
+  16 rows returned
+[
+  {
+    "spend": "10.302199",
+    "impressions": "1759",
+    "clicks": "43",
+    "ctr": "2.444571",
+    "cpc": "0.239586",
+    "actions": [
+      {
+        "action_type": "link_click",
+        "value": "40"
+      },
+      {
+        "action_type": "page_engagement",
+        "value": "44"
+      },
+      {
+        "action_type": "landing_page_view",
+        "value": "38"
+      },
+      {
+        "action_type": "omni_landing_page_view",
+        "value": "38"
+      },
+      {
+        "action_type": "post_engagement",
+        "value": "44"
+      },
+      {
+        "action_type": "post_interaction_gross",
+        "value": "4"
+      },
+      {
+        "action_type": "post_interaction_net",
+        "value": "4"
+      },
+      {
+        "action_type": "onsite_conversion.post_save",
+        "value": "1"
+      },
+      {
+        "action_type": "onsite_conversion.post_net_save",
+        "value": "1"
+      },
+      {
+        "action_type": "onsite_conversion.post_net_like",
+        "value": "3"
+      },
+      {
+        "action_type": "post_reaction",
+        "value": "3"
+      }
+    ],
+    "date_start": "2026-05-06",
+    "date_stop": "2026-05-12",
+    "body_asset": {
+      "text": "Build a Galaxy Together",
+      "id": "2940173526353923"
+    }
+  },
+  {
+    "spend": "5.881255",
+    "impressions": "1093",
+    "clicks": "36",
+    "ctr": "3.293687",
+    "cpc": "0.163368",
+    "actions": [
+      {
+        "action_type": "link_click",
+        "value": "35"
+      },
+      {
+        "action_type": "page_engagement",
+        "value": "37"
+      },
+      {
+        "action_type": "landing_page_view",
+        "value": "31"
+      },
+      {
+        "action_type": "omni_landing_page_view",
+        "value": "31"
+      },
+      {
+        "action_type": "post_engagement",
+        "value": "37"
+      },
+      {
+        "action_type": "post_interaction_gross",
+        "value": "1"
+      },
+      {
+        "action_type": "post_interaction_net",
+        "value": "1"
+      },
+      {
+        "action_type": "onsite_conversion.post_save",
+        "value": "1"
+      },
+      {
+        "action_type": "onsite_conversion.post_net_save",
+        "value": "1"
+      },
+      {
+        "action_type": "video_view",
+        "value": "1"
+      }
+    ],
+    "date_start": "2026-05-06",
+    "date_stop": "2026-05-12",
+    "body_asset": {
+      "text": "Your New Favorite 15-Minute Game\nA full game in your pocket.\n\nAstro Paws packs a complete 2-5 player experience into 54 cards. Take it to the coffee shop, the park, the airport, or just your kitchen table.\n\nSet up in 30 seconds. Play in 15 minutes. Argue about who gets to be the red panda for the rest of the day.\n\nComing to Kickstarter this May.",
+      "id": "2940373196333956"
+    }
+  },
+  {
+    "spend": "5.501174",
+    "impressions": "1111",
+    "clicks": "16",
+    "ctr": "1.440144",
+    "cpc": "0.343823",
+    "actions": [
+      {
+        "action_type": "link_click",
+        "value": "14"
+      },
+      {
+        "action_type": "page_engagement",
+        "value": "18"
+      },
+      {
+        "action_type": "landing_page_view",
+        "value": "13"
+      },
+      {
+        "action_type": "omni_landing_page_view",
+        "value": "13"
+      },
+      {
+        "action_type": "post_engagement",
+        "value": "18"
+      },
+      {
+        "action_type": "post_interaction_gross",
+        "value": "3"
+      },
+      {
+        "action_type": "post_interaction_net",
+        "value": "3"
+      },
+      {
+        "action_type": "onsite_conversion.post_net_like",
+        "value": "3"
+      },
+      {
+        "action_type": "video_view",
+        "value": "1"
+      },
+      {
+        "action_type": "post_reaction",
+        "value": "3"
+      }
+    ],
+    "date_start": "2026-05-06",
+    "date_stop": "2026-05-12",
+    "body_asset": {
+      "text": "Your New Favorite 20-Minute Game",
+      "id": "2940168269687782"
+    }
+  },
+  {
+    "spend": "4.881042",
+    "impressions": "752",
+    "clicks": "15",
+    "ctr": "1.994681",
+    "cpc": "0.325403",
+    "actions": [
+      {
+        "action_type": "link_click",
+        "value": "14"
+      },
+      {
+        "action_type": "page_engagement",
+        "value": "15"
+      },
+      {
+        "action_type": "landing_page_view",
+        "value": "14"
+      },
+      {
+        "action_type": "omni_landing_page_view",
+        "value": "14"
+      },
+      {
+        "action_type": "post_engagement",
+        "value": "15"
+      },
+      {
+        "action_type": "post_interaction_gross",
+        "value": "1"
+      },
+      {
+        "action_type": "post_interaction_net",
+        "value": "1"
+      },
+      {
+        "action_type": "onsite_conversion.post_net_like",
+        "value": "1"
+      },
+      {
+        "action_type": "post_reaction",
+        "value": "1"
+      }
+    ],
+    "date_start": "2026-05-06",
+    "date_stop": "2026-05-12",
+    "body_asset": {
+      "text": "Explore. Claim. Outsmart.",
+      "id": "2940173533020589"
+    }
+  },
+  {
+    "spend": "4.17089",
+    "impressions": "715",
+    "clicks": "16",
+    "ctr": "2.237762",
+    "cpc": "0.260681",
+    "actions": [
+      {
+        "action_type": "link_click",
+        "value": "13"
+      },
+      {
+        "action_type": "page_engagement",
+        "value": "16"
+      },
+      {
+        "action_type": "landing_page_view",
+        "value": "11"
+      },
+      {
+        "action_type": "omni_landing_page_view",
+        "value": "11"
+      },
+      {
+        "action_type": "post_engagement",
+        "value": "16"
+      },
+      {
+        "action_type": "post_interaction_gross",
+        "value": "3"
+      },
+      {
+        "action_type": "post_interaction_net",
+        "value": "3"
+      },
+      {
+        "action_type": "onsite_conversion.post_net_like",
+        "value": "3"
+      },
+      {
+        "action_type": "post_reaction",
+        "value": "3"
+      }
+    ],
+    "date_start": "2026-05-06",
+    "date_stop": "2026-05-12",
+    "body_asset": {
+      "text": "Who stole my planet!?",
+      "id": "2940173523020590"
+    }
+  }
+]
+
+=== TITLE_ASSET BREAKDOWN ===
+  10 rows returned
+[
+  {
+    "spend": "9.402007",
+    "impressions": "1683",
+    "clicks": "31",
+    "ctr": "1.841949",
+    "cpc": "0.303291",
+    "actions": [
+      {
+        "action_type": "link_click",
+        "value": "25"
+      },
+      {
+        "action_type": "page_engagement",
+        "value": "29"
+      },
+      {
+        "action_type": "landing_page_view",
+        "value": "27"
+      },
+      {
+        "action_type": "omni_landing_page_view",
+        "value": "27"
+      },
+      {
+        "action_type": "post_engagement",
+        "value": "29"
+      },
+      {
+        "action_type": "post_interaction_gross",
+        "value": "3"
+      },
+      {
+        "action_type": "post_interaction_net",
+        "value": "3"
+      },
+      {
+        "action_type": "onsite_conversion.post_net_like",
+        "value": "3"
+      },
+      {
+        "action_type": "video_view",
+        "value": "1"
+      },
+      {
+        "action_type": "post_reaction",
+        "value": "3"
+      }
+    ],
+    "date_start": "2026-05-06",
+    "date_stop": "2026-05-12",
+    "title_asset": {
+      "text": "Who stole my planet!?",
+      "id": "2940168409687768"
+    }
+  },
+  {
+    "spend": "6.79145",
+    "impressions": "1177",
+    "clicks": "23",
+    "ctr": "1.954121",
+    "cpc": "0.29528",
+    "actions": [
+      {
+        "action_type": "link_click",
+        "value": "22"
+      },
+      {
+        "action_type": "page_engagement",
+        "value": "24"
+      },
+      {
+        "action_type": "landing_page_view",
+        "value": "18"
+      },
+      {
+        "action_type": "omni_landing_page_view",
+        "value": "18"
+      },
+      {
+        "action_type": "post_engagement",
+        "value": "24"
+      },
+      {
+        "action_type": "post_interaction_gross",
+        "value": "1"
+      },
+      {
+        "action_type": "post_interaction_net",
+        "value": "1"
+      },
+      {
+        "action_type": "onsite_conversion.post_net_like",
+        "value": "1"
+      },
+      {
+        "action_type": "video_view",
+        "value": "1"
+      },
+      {
+        "action_type": "post_reaction",
+        "value": "1"
+      }
+    ],
+    "date_start": "2026-05-06",
+    "date_stop": "2026-05-12",
+    "title_asset": {
+      "text": "Explore. Claim. Outsmart.",
+      "id": "2940167869687822"
+    }
+  },
+  {
+    "spend": "6.581405",
+    "impressions": "1156",
+    "clicks": "37",
+    "ctr": "3.200692",
+    "cpc": "0.177876",
+    "actions": [
+      {
+        "action_type": "link_click",
+        "value": "35"
+      },
+      {
+        "action_type": "page_engagement",
+        "value": "38"
+      },
+      {
+        "action_type": "landing_page_view",
+        "value": "30"
+      },
+      {
+        "action_type": "omni_landing_page_view",
+        "value": "30"
+      },
+      {
+        "action_type": "post_engagement",
+        "value": "38"
+      },
+      {
+        "action_type": "post_interaction_gross",
+        "value": "1"
+      },
+      {
+        "action_type": "post_interaction_net",
+        "value": "1"
+      },
+      {
+        "action_type": "onsite_conversion.post_save",
+        "value": "1"
+      },
+      {
+        "action_type": "onsite_conversion.post_net_save",
+        "value": "1"
+      },
+      {
+        "action_type": "video_view",
+        "value": "2"
+      }
+    ],
+    "date_start": "2026-05-06",
+    "date_stop": "2026-05-12",
+    "title_asset": {
+      "text": "Micro May Pick: Astro Paws",
+      "id": "2940374703000472"
+    }
+  },
+  {
+    "spend": "5.281127",
+    "impressions": "913",
+    "clicks": "20",
+    "ctr": "2.190581",
+    "cpc": "0.264056",
+    "actions": [
+      {
+        "action_type": "link_click",
+        "value": "16"
+      },
+      {
+        "action_type": "page_engagement",
+        "value": "21"
+      },
+      {
+        "action_type": "landing_page_view",
+        "value": "15"
+      },
+      {
+        "action_type": "omni_landing_page_view",
+        "value": "15"
+      },
+      {
+        "action_type": "post_engagement",
+        "value": "21"
+      },
+      {
+        "action_type": "post_interaction_gross",
+        "value": "5"
+      },
+      {
+        "action_type": "comment",
+        "value": "1"
+      },
+      {
+        "action_type": "post_interaction_net",
+        "value": "5"
+      },
+      {
+        "action_type": "onsite_conversion.post_save",
+        "value": "1"
+      },
+      {
+        "action_type": "onsite_conversion.post_net_comment",
+        "value": "1"
+      },
+      {
+        "action_type": "onsite_conversion.post_net_save",
+        "value": "1"
+      },
+      {
+        "action_type": "onsite_conversion.post_net_like",
+        "value": "3"
+      },
+      {
+        "action_type": "post_reaction",
+        "value": "3"
+      }
+    ],
+    "date_start": "2026-05-06",
+    "date_stop": "2026-05-12",
+    "title_asset": {
+      "text": "2-4 Players | Ages 8+ | Time: 20min.",
+      "id": "2940173543020588"
+    }
+  },
+  {
+    "spend": "5.071082",
+    "impressions": "849",
+    "clicks": "21",
+    "ctr": "2.473498",
+    "cpc": "0.24148",
+    "actions": [
+      {
+        "action_type": "link_click",
+        "value": "20"
+      },
+      {
+        "action_type": "page_engagement",
+        "value": "20"
+      },
+      {
+        "action_type": "landing_page_view",
+        "value": "21"
+      },
+      {
+        "action_type": "omni_landing_page_view",
+        "value": "21"
+      },
+      {
+        "action_type": "post_engagement",
+        "value": "20"
+      }
+    ],
+    "date_start": "2026-05-06",
+    "date_stop": "2026-05-12",
+    "title_asset": {
+      "text": "AstroPaws Card Game",
+      "id": "2940173529687256"
+    }
+  }
+]
+
+=== DESCRIPTION_ASSET BREAKDOWN ===
+  6 rows returned
+[
+  {
+    "spend": "30.526516",
+    "impressions": "5334",
+    "clicks": "120",
+    "ctr": "2.249719",
+    "cpc": "0.254388",
+    "actions": [
+      {
+        "action_type": "onsite_conversion.messaging_block",
+        "value": "1"
+      },
+      {
+        "action_type": "link_click",
+        "value": "108"
+      },
+      {
+        "action_type": "page_engagement",
+        "value": "121"
+      },
+      {
+        "action_type": "landing_page_view",
+        "value": "101"
+      },
+      {
+        "action_type": "omni_landing_page_view",
+        "value": "101"
+      },
+      {
+        "action_type": "post_engagement",
+        "value": "121"
+      },
+      {
+        "action_type": "post_interaction_gross",
+        "value": "11"
+      },
+      {
+        "action_type": "comment",
+        "value": "1"
+      },
+      {
+        "action_type": "post_interaction_net",
+        "value": "11"
+      },
+      {
+        "action_type": "onsite_conversion.post_save",
+        "value": "1"
+      },
+      {
+        "action_type": "onsite_conversion.post_net_comment",
+        "value": "1"
+      },
+      {
+        "action_type": "onsite_conversion.post_net_save",
+        "value": "1"
+      },
+      {
+        "action_type": "onsite_conversion.post_net_like",
+        "value": "9"
+      },
+      {
+        "action_type": "video_view",
+        "value": "2"
+      },
+      {
+        "action_type": "post_reaction",
+        "value": "9"
+      }
+    ],
+    "date_start": "2026-05-06",
+    "date_stop": "2026-05-12",
+    "description_asset": {
+      "text": "2-4 Players | Ages 8+ | Time: 20min.",
+      "id": "2940165123021430"
+    }
+  },
+  {
+    "spend": "9.942122",
+    "impressions": "1738",
+    "clicks": "48",
+    "ctr": "2.761795",
+    "cpc": "0.207128",
+    "actions": [
+      {
+        "action_type": "link_click",
+        "value": "40"
+      },
+      {
+        "action_type": "page_engagement",
+        "value": "46"
+      },
+      {
+        "action_type": "landing_page_view",
+        "value": "38"
+      },
+      {
+        "action_type": "omni_landing_page_view",
+        "value": "38"
+      },
+      {
+        "action_type": "onsite_conversion.post_unlike",
+        "value": "1"
+      },
+      {
+        "action_type": "post_engagement",
+        "value": "46"
+      },
+      {
+        "action_type": "post_interaction_gross",
+        "value": "4"
+      },
+      {
+        "action_type": "post_interaction_net",
+        "value": "5"
+      },
+      {
+        "action_type": "onsite_conversion.post_save",
+        "value": "1"
+      },
+      {
+        "action_type": "onsite_conversion.post_net_save",
+        "value": "1"
+      },
+      {
+        "action_type": "onsite_conversion.post_net_like",
+        "value": "2"
+      },
+      {
+        "action_type": "video_view",
+        "value": "2"
+      },
+      {
+        "action_type": "post_reaction",
+        "value": "3"
+      }
+    ],
+    "date_start": "2026-05-06",
+    "date_stop": "2026-05-12",
+    "description_asset": {
+      "text": "Five astronaut animals. One galaxy. Endless cuteness.",
+      "id": "2940374936333782"
+    }
+  },
+  {
+    "spend": "6.301345",
+    "impressions": "1007",
+    "clicks": "20",
+    "ctr": "1.986097",
+    "cpc": "0.315067",
+    "actions": [
+      {
+        "action_type": "link_click",
+        "value": "18"
+      },
+      {
+        "action_type": "page_engagement",
+        "value": "20"
+      },
+      {
+        "action_type": "landing_page_view",
+        "value": "18"
+      },
+      {
+        "action_type": "omni_landing_page_view",
+        "value": "18"
+      },
+      {
+        "action_type": "post_engagement",
+        "value": "20"
+      },
+      {
+        "action_type": "post_interaction_gross",
+        "value": "2"
+      },
+      {
+        "action_type": "post_interaction_net",
+        "value": "2"
+      },
+      {
+        "action_type": "onsite_conversion.post_save",
+        "value": "1"
+      },
+      {
+        "action_type": "onsite_conversion.post_net_save",
+        "value": "1"
+      },
+      {
+        "action_type": "onsite_conversion.post_net_like",
+        "value": "1"
+      },
+      {
+        "action_type": "post_reaction",
+        "value": "1"
+      }
+    ],
+    "date_start": "2026-05-06",
+    "date_stop": "2026-05-12",
+    "description_asset": {
+      "text": "The cutest card game in the cosmos. Get notified at launch.",
+      "id": "2940375106333765"
+    }
+  },
+  {
+    "spend": "0.060013",
+    "impressions": "9",
+    "clicks": "0",
+    "ctr": "0",
+    "date_start": "2026-05-06",
+    "date_stop": "2026-05-12",
+    "description_asset": {
+      "text": "Build a Galaxy Together",
+      "id": "2940172803020662"
+    }
+  },
+  {
+    "spend": "0.020004",
+    "impressions": "2",
+    "clicks": "0",
+    "ctr": "0",
+    "date_start": "2026-05-06",
+    "date_stop": "2026-05-12",
+    "description_asset": {
+      "text": "Your New Favorite 15-Minute Game\nA full game in your pocket.\n\nAstro Paws packs a complete 2-5 player experience into 54 cards. Take it to the coffee shop, the park, the airport, or just your kitchen table.\n\nSet up in 30 seconds. Play in 15 minutes. Argue about who gets to be the red panda for the rest of the day.\n\nComing to Kickstarter this May.",
+      "id": "2942992946071981"
+    }
+  }
+]
+
+=== AD CREATIVES WITH TEXT ===
+{
+  "error": {
+    "message": "(#100) Tried accessing nonexisting field (link_description)",
+    "type": "OAuthException",
+    "code": 100,
+    "fbtrace_id": "A5-0Uwq6RSDoX2Ibeq4iuBd"
+  }
+}

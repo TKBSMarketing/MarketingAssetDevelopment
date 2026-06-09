@@ -1,0 +1,193 @@
+﻿================================================================================
+CAMPAIGN PERFORMANCE (90 days)
+================================================================================
+
+MARCH TOF 4.6.26 (OUTCOME_LEADS)
+  Spend: $2415.93 | Impressions: 98028 | Reach: 35616
+  CTR: 1.96% | CPC (all): $1.26
+  Link Clicks: 1199 | CPC (link): $2.01
+  Landing Page Views: 844 | Cost/LPV: $2.86
+  Leads: 19 | Cost/Lead: $127.15
+  Video Views: 20782 | Cost/View: $0.1163
+  Post Engagements: 22199 | Cost/Eng: $0.1088
+
+MOF Retargeting Campaign 3/15/26 (LINK_CLICKS)
+  Spend: $254.79 | Impressions: 25355 | Reach: 20144
+  CTR: 5.43% | CPC (all): $0.19
+  Link Clicks: 941 | CPC (link): $0.27
+  Landing Page Views: 754 | Cost/LPV: $0.34
+  Leads: 0
+  Video Views: 10002 | Cost/View: $0.0255
+  Post Engagements: 10982 | Cost/Eng: $0.0232
+
+APRIL TOF 4.8.26 (OUTCOME_LEADS)
+  Spend: $731.15 | Impressions: 36620 | Reach: 18791
+  CTR: 1.71% | CPC (all): $1.17
+  Link Clicks: 413 | CPC (link): $1.77
+  Landing Page Views: 217 | Cost/LPV: $3.37
+  Leads: 0
+  Video Views: 14637 | Cost/View: $0.0500
+  Post Engagements: 15105 | Cost/Eng: $0.0484
+
+TKBS/FTE/Leads/Lookalike/Dyn (OUTCOME_LEADS)
+  Spend: $33.17 | Impressions: 1516 | Reach: 864
+  CTR: 2.31% | CPC (all): $0.95
+  Link Clicks: 23 | CPC (link): $1.44
+  Landing Page Views: 15 | Cost/LPV: $2.21
+  Leads: 0
+  Video Views: 1 | Cost/View: $33.1700
+  Post Engagements: 29 | Cost/Eng: $1.1438
+
+================================================================================
+AD PERFORMANCE (90 days)
+================================================================================
+
+David Reel 2 | MARCH TOF 4.6.26
+  Ad Set: MARCH TOF INT: (224,700 - 264,300)
+  Spend: $1460.49 | CTR: 1.78%
+  Link Clicks: 695 | CPC(link): $2.10
+  LPV: 472 | Cost/LPV: $3.09
+  Leads: 12 | Cost/Lead: $121.71
+  Video Views: 19041
+
+Static: David Team 2 | MARCH TOF 4.6.26
+  Ad Set: MARCH TOF INT: (224,700 - 264,300)
+  Spend: $446.71 | CTR: 2.05%
+  Link Clicks: 228 | CPC(link): $1.96
+  LPV: 172 | Cost/LPV: $2.60
+  Leads: 5 | Cost/Lead: $89.34
+  Video Views: 0
+
+Spring reel 1 | APRIL TOF 4.8.26
+  Ad Set: APRIL TOF INT: (256,300 - 301,500)
+  Spend: $419.54 | CTR: 1.63%
+  Link Clicks: 239 | CPC(link): $1.76
+  LPV: 155 | Cost/LPV: $2.71
+  Leads: 0
+  Video Views: 8976
+
+Static: David Team 1 | MARCH TOF 4.6.26
+  Ad Set: MARCH TOF INT: (224,700 - 264,300)
+  Spend: $361.59 | CTR: 1.94%
+  Link Clicks: 144 | CPC(link): $2.51
+  LPV: 115 | Cost/LPV: $3.14
+  Leads: 2 | Cost/Lead: $180.79
+  Video Views: 0
+
+David Reel 1 | MARCH TOF 4.6.26
+  Ad Set: MARCH TOF INT: (224,700 - 264,300)
+  Spend: $147.14 | CTR: 3.83%
+  Link Clicks: 132 | CPC(link): $1.11
+  LPV: 85 | Cost/LPV: $1.73
+  Leads: 0
+  Video Views: 1741
+
+Spring reel 2 | APRIL TOF 4.8.26
+  Ad Set: APRIL TOF INT: (256,300 - 301,500)
+  Spend: $121.19 | CTR: 1.24%
+  Link Clicks: 56 | CPC(link): $2.16
+  LPV: 46 | Cost/LPV: $2.63
+  Leads: 0
+  Video Views: 4273
+
+Testimonial 2 | MOF Retargeting Campaign 3/15/26
+  Ad Set: Testimonial 2
+  Spend: $95.05 | CTR: 9.07%
+  Link Clicks: 426 | CPC(link): $0.22
+  LPV: 329 | Cost/LPV: $0.29
+  Leads: 0
+  Video Views: 2773
+
+David Reel 2 | APRIL TOF 4.8.26
+  Ad Set: APRIL TOF INT: (256,300 - 301,500)
+  Spend: $88.08 | CTR: 2.81%
+  Link Clicks: 67 | CPC(link): $1.31
+  LPV: 4 | Cost/LPV: $22.02
+  Leads: 0
+  Video Views: 776
+
+Testimonial 1 | MOF Retargeting Campaign 3/15/26
+  Ad Set: Testimonial 1
+  Spend: $82.94 | CTR: 4.68%
+  Link Clicks: 277 | CPC(link): $0.30
+  LPV: 230 | Cost/LPV: $0.36
+  Leads: 0
+  Video Views: 3863
+
+Testimonial 3 | MOF Retargeting Campaign 3/15/26
+  Ad Set: Testimonial 3
+  Spend: $76.80 | CTR: 3.21%
+  Link Clicks: 238 | CPC(link): $0.32
+  LPV: 195 | Cost/LPV: $0.39
+  Leads: 0
+  Video Views: 3366
+
+Static: David Team 2 | APRIL TOF 4.8.26
+  Ad Set: APRIL TOF INT: (256,300 - 301,500)
+  Spend: $62.30 | CTR: 2.68%
+  Link Clicks: 33 | CPC(link): $1.89
+  LPV: 4 | Cost/LPV: $15.57
+  Leads: 0
+  Video Views: 0
+
+Spring reel 3 | APRIL TOF 4.8.26
+  Ad Set: APRIL TOF INT: (256,300 - 301,500)
+  Spend: $40.04 | CTR: 1.24%
+  Link Clicks: 18 | CPC(link): $2.22
+  LPV: 8 | Cost/LPV: $5.00
+  Leads: 0
+  Video Views: 612
+
+Images | TKBS/FTE/Leads/Lookalike/Dyn
+  Ad Set: Lookalike FTE Facebook + Page Visitors
+  Spend: $33.17 | CTR: 2.31%
+  Link Clicks: 23 | CPC(link): $1.44
+  LPV: 15 | Cost/LPV: $2.21
+  Leads: 1 | Cost/Lead: $33.17
+  Video Views: 1
+
+================================================================================
+IMAGE CREATIVE PERFORMANCE (90 days)
+================================================================================
+
+================================================================================
+AGE/GENDER PERFORMANCE (90 days)
+================================================================================
+  Male 65+: $711.03 spend | CTR: 3.26% | LC: 728 | CPC(link): $0.98 | Leads: 4
+  Female 65+: $555.18 spend | CTR: 4.58% | LC: 610 | CPC(link): $0.91 | Leads: 5
+  Male 55-64: $540.39 spend | CTR: 2.02% | LC: 373 | CPC(link): $1.45 | Leads: 6
+  Female 55-64: $414.47 spend | CTR: 2.50% | LC: 263 | CPC(link): $1.58
+  Male 45-54: $328.70 spend | CTR: 1.39% | LC: 171 | CPC(link): $1.92 | Leads: 1
+  Female 45-54: $267.68 spend | CTR: 1.50% | LC: 86 | CPC(link): $3.11
+  Male 35-44: $197.28 spend | CTR: 1.17% | LC: 80 | CPC(link): $2.47 | Leads: 1
+  Female 35-44: $166.77 spend | CTR: 1.51% | LC: 83 | CPC(link): $2.01 | Leads: 2
+  Male 25-34: $105.45 spend | CTR: 1.60% | LC: 52 | CPC(link): $2.03
+  Female 25-34: $66.84 spend | CTR: 1.48% | LC: 26 | CPC(link): $2.57
+  Male 18-24: $17.06 spend | CTR: 5.69% | LC: 15 | CPC(link): $1.14
+  Female 18-24: $3.52 spend | CTR: 0.62% | LC: 1 | CPC(link): $3.52
+  Male Unknown: $0.01 spend | CTR: 0.00% | LC: 0
+
+================================================================================
+PLATFORM/PLACEMENT (90 days)
+================================================================================
+  facebook / feed: $1475.25 | CTR: 3.20% | LC: 970 | CPC(link): $1.52
+  facebook / facebook_reels: $1076.45 | CTR: 1.55% | LC: 443 | CPC(link): $2.43
+  instagram / instagram_reels: $242.60 | CTR: 0.81% | LC: 40 | CPC(link): $6.06
+  instagram / feed: $190.02 | CTR: 2.09% | LC: 158 | CPC(link): $1.20
+  facebook / marketplace: $92.93 | CTR: 0.89% | LC: 70 | CPC(link): $1.33
+  facebook / instream_video: $71.06 | CTR: 2.86% | LC: 44 | CPC(link): $1.61
+  facebook / facebook_stories: $62.37 | CTR: 3.29% | LC: 27 | CPC(link): $2.31
+  instagram / instagram_stories: $50.90 | CTR: 2.31% | LC: 31 | CPC(link): $1.64
+  audience_network / an_classic: $43.35 | CTR: 8.07% | LC: 239 | CPC(link): $0.18
+  facebook / search: $41.88 | CTR: 1.00% | LC: 36 | CPC(link): $1.16
+  audience_network / rewarded_video: $36.66 | CTR: 38.48% | LC: 436 | CPC(link): $0.08
+  facebook / facebook_reels_overlay: $18.89 | CTR: 0.67% | LC: 34 | CPC(link): $0.56
+  threads / threads_feed: $14.59 | CTR: 2.45% | LC: 32 | CPC(link): $0.46
+  facebook / facebook_notification: $9.65 | CTR: 6.25% | LC: 8 | CPC(link): $1.21
+  facebook / right_hand_column: $4.10 | CTR: 0.25% | LC: 4 | CPC(link): $1.03
+  facebook / facebook_profile_feed: $4.02 | CTR: 2.58% | LC: 3 | CPC(link): $1.34
+  unknown / unknown: $0.09 | CTR: 6.25% | LC: 1 | CPC(link): $0.09
+  instagram / instagram_explore_grid_home: $0.08 | CTR: 0.00% | LC: 0
+  messenger / messenger_stories: $0.07 | CTR: 0.00% | LC: 0
+  instagram / instagram_explore: $0.06 | CTR: 0.00% | LC: 0
+  instagram / instagram_search: $0.00 | CTR: 0.00% | LC: 0
