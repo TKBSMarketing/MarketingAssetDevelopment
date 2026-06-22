@@ -22,6 +22,12 @@ from reportlab.graphics import renderPDF
 
 sys.stdout.reconfigure(encoding='utf-8')
 
+# Shared metric helpers (extractors, formatters, objective config, traffic light).
+# Imported with * so the insight engine and PDF builder can use them by bare name.
+import metrics as M
+from metrics import *  # noqa: F401,F403
+from profiles import select_profile, profile_for_objective
+
 USABLE_WIDTH = 7.3 * inch  # letter width 8.5 - 0.6in left - 0.6in right
 
 BRAND_CHARCOAL = HexColor('#1B2838')
@@ -33,16 +39,29 @@ WHITE = HexColor('#ffffff')
 BEST_ROW = HexColor('#e6f9f0')
 WORST_ROW = HexColor('#fde8e8')
 
-load_dotenv(os.path.join(os.path.dirname(__file__), '..', '.env'))
-TOKEN = os.getenv('META_ACCESS_TOKEN')
-ACCOUNT_ID = os.getenv('META_AD_ACCOUNT_ID')
 BASE = 'https://graph.facebook.com/v21.0'
-CAMPAIGN_FILTER = os.getenv('CAMPAIGN_FILTER', '').strip()
-CLIENT_NAME = os.getenv('CLIENT_NAME', 'Ad Performance')
-FILTER_PARAM = (
-    f'[{{"field":"campaign.name","operator":"CONTAIN","value":"{CAMPAIGN_FILTER}"}}]'
-    if CAMPAIGN_FILTER else '[]'
-)
+
+# Client config is populated by configure_client() once --client is resolved.
+# This single script serves every client; each client supplies only a .env.
+TOKEN = None
+ACCOUNT_ID = None
+CAMPAIGN_FILTER = ''
+CLIENT_NAME = 'Ad Performance'
+FILTER_PARAM = '[]'
+
+
+def configure_client(client_dir):
+    """Load a client's .env and populate the module-level Meta config."""
+    global TOKEN, ACCOUNT_ID, CAMPAIGN_FILTER, CLIENT_NAME, FILTER_PARAM
+    load_dotenv(os.path.join(client_dir, '.env'), override=True)
+    TOKEN = os.getenv('META_ACCESS_TOKEN')
+    ACCOUNT_ID = os.getenv('META_AD_ACCOUNT_ID')
+    CAMPAIGN_FILTER = os.getenv('CAMPAIGN_FILTER', '').strip()
+    CLIENT_NAME = os.getenv('CLIENT_NAME', 'Ad Performance')
+    FILTER_PARAM = (
+        f'[{{"field":"campaign.name","operator":"CONTAIN","value":"{CAMPAIGN_FILTER}"}}]'
+        if CAMPAIGN_FILTER else '[]'
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -64,7 +83,7 @@ def fetch_account_info():
 
 def fetch_campaign_insights(date_preset='last_7d'):
     data = api_get(f'act_{ACCOUNT_ID}/insights', {
-        'fields': 'campaign_name,campaign_id,objective,spend,impressions,reach,clicks,ctr,cpc,cpp,actions,cost_per_action_type',
+        'fields': 'campaign_name,campaign_id,objective,spend,impressions,reach,clicks,ctr,cpc,cpp,actions,action_values,cost_per_action_type',
         'date_preset': date_preset,
         'level': 'campaign',
         'filtering': FILTER_PARAM,
@@ -116,7 +135,7 @@ def fetch_daily_insights(days=7):
     since = (today - timedelta(days=days)).strftime('%Y-%m-%d')
     until = today.strftime('%Y-%m-%d')
     data = api_get(f'act_{ACCOUNT_ID}/insights', {
-        'fields': 'spend,impressions,reach,clicks,ctr,cpc,actions',
+        'fields': 'spend,impressions,reach,clicks,ctr,cpc,actions,action_values',
         'time_range': f'{{"since":"{since}","until":"{until}"}}',
         'time_increment': 1,
         'filtering': FILTER_PARAM,
@@ -236,140 +255,9 @@ def fetch_ad_creative_details(ad_id):
 # Data helpers
 # ---------------------------------------------------------------------------
 
-def extract_link_clicks(row):
-    actions = row.get('actions', [])
-    return int(next((a['value'] for a in actions if a['action_type'] == 'link_click'), 0))
-
-
-def extract_cost_per_link_click(row):
-    costs = row.get('cost_per_action_type', [])
-    val = next((a['value'] for a in costs if a['action_type'] == 'link_click'), None)
-    return float(val) if val else None
-
-
-OBJECTIVE_LABELS = {
-    'OUTCOME_TRAFFIC': 'Traffic',
-    'OUTCOME_LEADS': 'Leads',
-    'OUTCOME_SALES': 'Sales',
-    'OUTCOME_ENGAGEMENT': 'Engagement',
-    'OUTCOME_AWARENESS': 'Awareness',
-    'OUTCOME_APP_PROMOTION': 'App Promotion',
-    'LINK_CLICKS': 'Traffic',
-    'LEAD_GENERATION': 'Leads',
-    'CONVERSIONS': 'Conversions',
-    'POST_ENGAGEMENT': 'Engagement',
-    'BRAND_AWARENESS': 'Awareness',
-    'REACH': 'Reach',
-    'VIDEO_VIEWS': 'Video Views',
-    'MESSAGES': 'Messages',
-}
-
-
-def get_objective_label(campaign):
-    raw = campaign.get('objective', '')
-    return OBJECTIVE_LABELS.get(raw, raw.replace('OUTCOME_', '').replace('_', ' ').title() if raw else 'Unknown')
-
-
-# ---------------------------------------------------------------------------
-# Traffic light thresholds & helpers (Executive Summary)
-# ---------------------------------------------------------------------------
-
-# Primary metric = the metric that DEFINES success for this objective
-# Secondary metrics provide supporting context but aren't the headline
-OBJECTIVE_METRICS = {
-    'Traffic': {
-        'primary': 'link_clicks',
-        'primary_cost': 'cpc_link',
-        'primary_label': 'Link Clicks',
-        'primary_cost_label': 'CPC (Link)',
-        'thresholds': {
-            'ctr': (2.0, 1.0),             # >2% green, 1-2% yellow, <1% red (higher=better)
-            'cpc_link': (0.50, 1.00),       # <$0.50 green, $0.50-$1.00 yellow, >$1.00 red (lower=better)
-        }
-    },
-    'Leads': {
-        'primary': 'landing_page_views',
-        'primary_cost': 'cost_per_lpv',
-        'primary_label': 'Landing Page Views',
-        'primary_cost_label': 'Cost / Landing Page View',
-        'thresholds': {
-            'ctr': (1.5, 0.8),              # Lead ads have lower CTR — that's normal
-            'cost_per_lpv': (3.00, 8.00),   # <$3 green, $3-$8 yellow, >$8 red (lower=better)
-            'cpc_link': (2.00, 5.00),       # Secondary — leads CPC is naturally higher
-        }
-    },
-    'Sales': {
-        'primary': 'link_clicks',
-        'primary_cost': 'cpc_link',
-        'primary_label': 'Link Clicks',
-        'primary_cost_label': 'CPC (Link)',
-        'thresholds': {
-            'ctr': (1.5, 0.8),
-            'cpc_link': (1.50, 4.00),
-        }
-    },
-    'Engagement': {
-        'primary': 'post_engagements',
-        'primary_cost': 'cost_per_engagement',
-        'primary_label': 'Engagements',
-        'primary_cost_label': 'Cost / Engagement',
-        'thresholds': {
-            'ctr': (3.0, 1.5),
-            'cost_per_engagement': (0.10, 0.30),
-        }
-    },
-    'default': {
-        'primary': 'link_clicks',
-        'primary_cost': 'cpc_link',
-        'primary_label': 'Link Clicks',
-        'primary_cost_label': 'CPC (Link)',
-        'thresholds': {
-            'ctr': (2.0, 1.0),
-            'cpc_link': (1.00, 3.00),
-        }
-    }
-}
-
-# Backward compat alias
-METRIC_THRESHOLDS = {k: v['thresholds'] for k, v in OBJECTIVE_METRICS.items()}
-
-COLOR_GREEN = '#22c55e'
-COLOR_YELLOW = '#f59e0b'
-COLOR_RED = '#ef4444'
-
-
-def traffic_light(value, thresholds, mode='lower_is_better'):
-    """
-    Return a colored paragraph with a filled circle indicator.
-    thresholds = (green_threshold, yellow_threshold)
-    mode='lower_is_better': green if value <= green, red if value > yellow
-    mode='higher_is_better': green if value >= green, red if value < yellow
-    """
-    green_threshold, yellow_threshold = thresholds
-    if mode == 'lower_is_better':
-        if value <= green_threshold:
-            color = COLOR_GREEN
-        elif value <= yellow_threshold:
-            color = COLOR_YELLOW
-        else:
-            color = COLOR_RED
-    else:  # higher_is_better
-        if value >= green_threshold:
-            color = COLOR_GREEN
-        elif value >= yellow_threshold:
-            color = COLOR_YELLOW
-        else:
-            color = COLOR_RED
-    return color
-
-
-def traffic_light_paragraph(value, formatted_value, thresholds, mode, label, styles):
-    """Return a Paragraph with a colored circle indicator, label, and formatted value."""
-    color = traffic_light(value, thresholds, mode)
-    return Paragraph(
-        f'<font color="{color}">&#9679;</font> {label}: <b>{formatted_value}</b>',
-        styles['BodyText']
-    )
+# Metric extractors, formatters, objective config, and the traffic-light helpers
+# now live in metrics.py (imported with * above). Only the reportlab-bound
+# drawing/IO helpers remain here.
 
 
 def make_sparkline(values, width=120, height=25, color=None):
@@ -389,114 +277,6 @@ def make_sparkline(values, width=120, height=25, color=None):
         points.extend([x, y])
     d.add(PolyLine(points, strokeColor=color, strokeWidth=1.5))
     return d
-
-
-def extract_action(row, action_type):
-    """Extract a specific action value from the actions array."""
-    for a in row.get('actions', []):
-        if a['action_type'] == action_type:
-            return int(a['value'])
-    return 0
-
-
-def extract_leads(row):
-    """Extract lead conversions — tries multiple action types in priority order."""
-    for action_type in ['lead', 'onsite_web_lead', 'offsite_conversion.fb_pixel_lead', 'offsite_conversion.fb_pixel_custom']:
-        val = extract_action(row, action_type)
-        if val > 0:
-            return val
-    return 0
-
-
-def extract_cost_per_lead(row):
-    """Extract cost per lead from cost_per_action_type."""
-    for action_type in ['lead', 'onsite_web_lead', 'offsite_conversion.fb_pixel_lead', 'offsite_conversion.fb_pixel_custom']:
-        for a in row.get('cost_per_action_type', []):
-            if a['action_type'] == action_type:
-                return float(a['value'])
-    return 0
-
-
-def extract_landing_page_views(row):
-    return extract_action(row, 'landing_page_view')
-
-
-def extract_post_engagements(row):
-    return extract_action(row, 'post_engagement')
-
-
-def extract_video_views(row):
-    return extract_action(row, 'video_view')
-
-
-def get_primary_metrics(campaigns):
-    """Calculate primary metrics grouped by objective. For Leads campaigns,
-    automatically upgrades from landing_page_views to actual lead conversions
-    when pixel data is available."""
-    obj_data = {}
-    for c in campaigns:
-        obj = get_objective_label(c)
-        if obj not in obj_data:
-            obj_data[obj] = {
-                'spend': 0, 'impressions': 0, 'clicks': 0,
-                'link_clicks': 0, 'landing_page_views': 0,
-                'leads': 0, 'post_engagements': 0, 'video_views': 0,
-                'campaigns': []
-            }
-        d = obj_data[obj]
-        d['spend'] += float(c.get('spend', 0))
-        d['impressions'] += int(c.get('impressions', 0))
-        d['clicks'] += int(c.get('clicks', 0))
-        d['link_clicks'] += extract_link_clicks(c)
-        d['landing_page_views'] += extract_landing_page_views(c)
-        d['leads'] += extract_leads(c)
-        d['post_engagements'] += extract_post_engagements(c)
-        d['video_views'] += extract_video_views(c)
-        d['campaigns'].append(c.get('campaign_name', 'Unknown'))
-
-    for obj, d in obj_data.items():
-        config = OBJECTIVE_METRICS.get(obj, OBJECTIVE_METRICS['default']).copy()
-
-        # For Leads campaigns: upgrade to actual lead data when pixel is tracking
-        if obj == 'Leads' and d['leads'] > 0:
-            config['primary'] = 'leads'
-            config['primary_cost'] = 'cost_per_lead'
-            config['primary_label'] = 'Leads'
-            config['primary_cost_label'] = 'Cost / Lead'
-            config['thresholds'] = dict(config.get('thresholds', {}))
-            config['thresholds']['cost_per_lead'] = (30.00, 75.00)  # Local services benchmark
-
-        d['primary_count'] = d.get(config['primary'], d['link_clicks'])
-        d['primary_cost'] = (d['spend'] / d['primary_count']) if d['primary_count'] > 0 else 0
-        d['ctr'] = (d['clicks'] / d['impressions'] * 100) if d['impressions'] else 0
-        d['cpc_link'] = (d['spend'] / d['link_clicks']) if d['link_clicks'] else 0
-        d['cost_per_lpv'] = (d['spend'] / d['landing_page_views']) if d['landing_page_views'] else 0
-        d['cost_per_lead'] = (d['spend'] / d['leads']) if d['leads'] else 0
-        d['cost_per_engagement'] = (d['spend'] / d['post_engagements']) if d['post_engagements'] else 0
-        d['config'] = config
-
-    return obj_data
-
-
-def calc_link_cpc(row):
-    """Calculate cost per link click (spend / link clicks). More useful than Meta's CPC which includes all click types."""
-    spend = float(row.get('spend', 0))
-    lc = extract_link_clicks(row)
-    if lc > 0:
-        return spend / lc
-    return 0
-
-
-def fmt_money(val):
-    return f'${float(val):,.2f}' if val else '$0.00'
-
-
-def fmt_number(val):
-    return f'{int(val):,}' if val else '0'
-
-
-def fmt_pct(val):
-    return f'{float(val):.2f}%' if val else '0.00%'
 
 
 def download_thumbnail(url, max_size=(90, 90)):
@@ -519,32 +299,6 @@ def download_thumbnail(url, max_size=(90, 90)):
         return RLImage(tmp.name, width=disp_w, height=disp_h)
     except Exception:
         return None
-
-
-def clean_image_name(name):
-    """Remove _105 or similar numeric suffixes from image asset names."""
-    if not name:
-        return 'Unknown'
-    cleaned = re.sub(r'_\d+$', '', name)
-    return cleaned
-
-
-def clean_placement_name(platform, position):
-    """Convert API placement identifiers to human-readable names."""
-    platform_clean = (platform or '').replace('_', ' ').title()
-    position_clean = (position or '').replace('_', ' ').title()
-    if platform_clean and position_clean:
-        return f'{platform_clean} {position_clean}'
-    return platform_clean or position_clean or 'Unknown'
-
-
-def truncate_text(text, max_len=60):
-    if not text:
-        return 'Unknown'
-    text = text.replace('\n', ' ').strip()
-    if len(text) <= max_len:
-        return text
-    return text[:max_len-3] + '...'
 
 
 # ---------------------------------------------------------------------------
@@ -1148,9 +902,31 @@ def build_pdf(output_path, days, account_info, campaigns, adsets, ads, daily,
     total_reach = sum(int(c.get('reach', 0)) for c in campaigns)
     total_clicks = sum(int(c.get('clicks', 0)) for c in campaigns)
     total_link_clicks = sum(extract_link_clicks(c) for c in campaigns)
-    avg_ctr = (total_clicks / total_impressions * 100) if total_impressions else 0
+    # Link CTR (link clicks / impressions) so the headline metrics reconcile with each other
+    avg_ctr = (total_link_clicks / total_impressions * 100) if total_impressions else 0
     avg_cpc = (total_spend / total_link_clicks) if total_link_clicks else 0
     cost_per_link = (total_spend / total_link_clicks) if total_link_clicks else 0
+
+    # Sales / conversion totals
+    total_purchases = sum(extract_purchases(c) for c in campaigns)
+    total_add_to_cart = sum(extract_add_to_cart(c) for c in campaigns)
+    total_checkouts = sum(extract_initiate_checkout(c) for c in campaigns)
+    total_revenue = sum(extract_purchase_value(c) for c in campaigns)
+    total_roas = (total_revenue / total_spend) if total_spend else 0
+    cost_per_purchase = (total_spend / total_purchases) if total_purchases else 0
+
+    # The selected profile drives the report's headline layout (summary grid,
+    # exec card, campaign table, daily trend). Everything else is shared.
+    profile = select_profile(campaigns)
+    totals = {
+        'spend': total_spend,
+        'purchases': total_purchases,
+        'add_to_cart': total_add_to_cart,
+        'checkouts': total_checkouts,
+        'revenue': total_revenue,
+        'roas': total_roas,
+        'cost_per_purchase': cost_per_purchase,
+    }
 
     # -----------------------------------------------------------------------
     # Generate insights EARLY so top_3_actions are available for exec summary
@@ -1242,6 +1018,9 @@ def build_pdf(output_path, days, account_info, campaigns, adsets, ads, daily,
         metrics_line = Paragraph(primary_text, styles['ExecMetric'])
         secondary_line = Paragraph(secondary_text, styles['ExecMetric'])
 
+        # Objective-specific highlight line (e.g. ROAS for Sales campaigns)
+        extra_line = profile_for_objective(obj).exec_line(stats, styles)
+
         # Sparklines for right column
         sparkline_ctr = make_sparkline(daily_ctrs, width=120, height=25, color=BRAND_MINT)
         sparkline_spend = make_sparkline(daily_spends, width=120, height=25, color=BRAND_CHARCOAL)
@@ -1260,7 +1039,10 @@ def build_pdf(output_path, days, account_info, campaigns, adsets, ads, daily,
         camp_list = Paragraph(f'Campaigns: {camp_names}', styles['ExecCampaignList'])
 
         # Build a 2-column layout: left = metrics, right = sparklines
-        left_content = [metrics_line, Spacer(1, 2), secondary_line, Spacer(1, 4), camp_list]
+        left_content = [metrics_line, Spacer(1, 2), secondary_line]
+        if extra_line is not None:
+            left_content += [Spacer(1, 2), extra_line]
+        left_content += [Spacer(1, 4), camp_list]
         right_content = sparkline_elements if sparkline_elements else [Spacer(1, 1)]
 
         # Use a nested table for left content
@@ -1434,16 +1216,17 @@ def build_pdf(output_path, days, account_info, campaigns, adsets, ads, daily,
         metric_cell('Impressions', fmt_number(total_impressions)),
         metric_cell('Reach', fmt_number(total_reach)),
         metric_cell('Link Clicks', fmt_number(total_link_clicks)),
-        metric_cell('Avg CTR', fmt_pct(avg_ctr)),
+        metric_cell('Link CTR', fmt_pct(avg_ctr)),
         metric_cell('CPC (Link)', fmt_money(avg_cpc)),
     ]
+    metrics_data += profile.summary_cells(totals, metric_cell)
 
     metric_table_data = [
         [m[0] for m in metrics_data],
         [m[1] for m in metrics_data],
     ]
 
-    metric_col_widths = [1.35*inch, 1.15*inch, 1.1*inch, 1.1*inch, 1.0*inch, 1.0*inch]
+    metric_col_widths = [USABLE_WIDTH / len(metrics_data)] * len(metrics_data)
     metric_table = Table(metric_table_data, colWidths=metric_col_widths)
     metric_table.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, -1), BRAND_LIGHT),
@@ -1462,48 +1245,10 @@ def build_pdf(output_path, days, account_info, campaigns, adsets, ads, daily,
     section_elements = []
     section_elements.append(Paragraph('Campaign Performance', styles['SectionHead']))
 
-    # Check if any campaign has lead conversion data
-    has_leads = any(extract_leads(c) > 0 for c in campaigns)
-
-    if has_leads:
-        camp_header = ['Campaign', 'Objective', 'Spend', 'Leads', 'Cost/Lead', 'LPVs', 'CTR', 'CPC (Link)']
-        camp_rows = [camp_header]
-        for c in campaigns:
-            leads = extract_leads(c)
-            cpl = extract_cost_per_lead(c)
-            lpv = extract_landing_page_views(c)
-            camp_rows.append([
-                Paragraph(c.get('campaign_name', 'Unknown'), styles['TableCell']),
-                get_objective_label(c),
-                fmt_money(c.get('spend', 0)),
-                fmt_number(leads) if leads else '—',
-                fmt_money(cpl) if cpl else '—',
-                fmt_number(lpv),
-                fmt_pct(c.get('ctr', 0)),
-                fmt_money(calc_link_cpc(c)),
-            ])
-        camp_col_widths = [(USABLE_WIDTH - 5.55*inch), 0.7*inch, 0.65*inch, 0.55*inch, 0.75*inch, 0.55*inch, 0.6*inch, 0.75*inch]
-        camp_table = Table(camp_rows, colWidths=camp_col_widths, repeatRows=1)
-        camp_style = make_table_style()
-        color_code_table(camp_style, campaigns, metric_col_index=4, mode='cpc')
-    else:
-        camp_header = ['Campaign', 'Objective', 'Spend', 'Reach', 'Link Clicks', 'CTR', 'CPC (Link)']
-        camp_rows = [camp_header]
-        for c in campaigns:
-            lc = extract_link_clicks(c)
-            camp_rows.append([
-                Paragraph(c.get('campaign_name', 'Unknown'), styles['TableCell']),
-                get_objective_label(c),
-                fmt_money(c.get('spend', 0)),
-                fmt_number(c.get('reach', 0)),
-                fmt_number(lc),
-                fmt_pct(c.get('ctr', 0)),
-                fmt_money(calc_link_cpc(c)),
-            ])
-        camp_col_widths = [(USABLE_WIDTH - 4.85*inch), 0.8*inch, 0.7*inch, 0.7*inch, 0.85*inch, 0.65*inch, 0.85*inch]
-        camp_table = Table(camp_rows, colWidths=camp_col_widths, repeatRows=1)
-        camp_style = make_table_style()
-        color_code_table(camp_style, campaigns, metric_col_index=6, mode='cpc')
+    camp_rows, camp_col_widths = profile.campaign_table(campaigns, styles, USABLE_WIDTH)
+    camp_table = Table(camp_rows, colWidths=camp_col_widths, repeatRows=1)
+    camp_style = make_table_style()
+    color_code_table(camp_style, campaigns, metric_col_index=0, mode='cpc')
     camp_table.setStyle(camp_style)
     section_elements.append(camp_table)
     section_elements.append(Spacer(1, 12))
@@ -1530,7 +1275,7 @@ def build_pdf(output_path, days, account_info, campaigns, adsets, ads, daily,
                 Paragraph(img_name, styles['TableCell']),
                 fmt_money(row.get('spend', 0)),
                 fmt_number(lc),
-                fmt_pct(row.get('ctr', 0)),
+                fmt_pct(calc_link_ctr(row)),
                 fmt_money(calc_link_cpc(row)),
             ])
 
@@ -1566,7 +1311,7 @@ def build_pdf(output_path, days, account_info, campaigns, adsets, ads, daily,
                 Paragraph(truncate_text(a.get('campaign_name', ''), 30), styles['TableCell']),
                 fmt_money(a.get('spend', 0)),
                 fmt_number(lc),
-                fmt_pct(a.get('ctr', 0)),
+                fmt_pct(calc_link_ctr(a)),
                 fmt_money(calc_link_cpc(a)),
             ])
 
@@ -1599,7 +1344,7 @@ def build_pdf(output_path, days, account_info, campaigns, adsets, ads, daily,
                     Paragraph(text, styles['TableCell']),
                     fmt_money(row.get('spend', 0)),
                     fmt_number(lc),
-                    fmt_pct(row.get('ctr', 0)),
+                    fmt_pct(calc_link_ctr(row)),
                     fmt_money(calc_link_cpc(row)),
                 ])
 
@@ -1631,7 +1376,7 @@ def build_pdf(output_path, days, account_info, campaigns, adsets, ads, daily,
                     Paragraph(text, styles['TableCell']),
                     fmt_money(row.get('spend', 0)),
                     fmt_number(lc),
-                    fmt_pct(row.get('ctr', 0)),
+                    fmt_pct(calc_link_ctr(row)),
                     fmt_money(calc_link_cpc(row)),
                 ])
 
@@ -1663,7 +1408,7 @@ def build_pdf(output_path, days, account_info, campaigns, adsets, ads, daily,
                     Paragraph(text, styles['TableCell']),
                     fmt_money(row.get('spend', 0)),
                     fmt_number(lc),
-                    fmt_pct(row.get('ctr', 0)),
+                    fmt_pct(calc_link_ctr(row)),
                     fmt_money(calc_link_cpc(row)),
                 ])
 
@@ -1716,7 +1461,7 @@ def build_pdf(output_path, days, account_info, campaigns, adsets, ads, daily,
         age_rows = [age_header]
         for age in sorted(age_agg.keys()):
             d = age_agg[age]
-            ctr = (d['clicks'] / d['impressions'] * 100) if d['impressions'] else 0
+            ctr = (d['link_clicks'] / d['impressions'] * 100) if d['impressions'] else 0
             cpc = d['spend'] / d['link_clicks'] if d['link_clicks'] > 0 else 0
             age_rows.append([
                 age,
@@ -1741,7 +1486,7 @@ def build_pdf(output_path, days, account_info, campaigns, adsets, ads, daily,
         if gender_with_lc:
             best_seg = min(gender_with_lc.items(), key=lambda x: x[1]['spend'] / x[1]['link_clicks'])
             seg_cpc = best_seg[1]['spend'] / best_seg[1]['link_clicks']
-            seg_ctr = best_seg[1]['clicks'] / best_seg[1]['impressions'] * 100 if best_seg[1]['impressions'] else 0
+            seg_ctr = best_seg[1]['link_clicks'] / best_seg[1]['impressions'] * 100 if best_seg[1]['impressions'] else 0
             section_elements.append(Spacer(1, 4))
             section_elements.append(Paragraph(
                 f'<b>Top segment:</b> {best_seg[0]} -- {fmt_pct(seg_ctr)} CTR, '
@@ -1776,7 +1521,7 @@ def build_pdf(output_path, days, account_info, campaigns, adsets, ads, daily,
                     fmt_money(row.get('spend', 0)),
                     fmt_number(row.get('impressions', 0)),
                     fmt_number(lc),
-                    fmt_pct(row.get('ctr', 0)),
+                    fmt_pct(calc_link_ctr(row)),
                     fmt_money(calc_link_cpc(row)),
                 ])
 
@@ -1806,7 +1551,7 @@ def build_pdf(output_path, days, account_info, campaigns, adsets, ads, daily,
                 fmt_money(a.get('spend', 0)),
                 fmt_number(a.get('reach', 0)),
                 fmt_number(lc),
-                fmt_pct(a.get('ctr', 0)),
+                fmt_pct(calc_link_ctr(a)),
                 fmt_money(calc_link_cpc(a)),
             ])
 
@@ -1832,7 +1577,7 @@ def build_pdf(output_path, days, account_info, campaigns, adsets, ads, daily,
                 Paragraph(truncate_text(a.get('ad_name', 'Unknown'), 50), styles['TableCell']),
                 fmt_money(a.get('spend', 0)),
                 fmt_number(lc),
-                fmt_pct(a.get('ctr', 0)),
+                fmt_pct(calc_link_ctr(a)),
                 fmt_money(calc_link_cpc(a)),
             ])
 
@@ -1850,38 +1595,8 @@ def build_pdf(output_path, days, account_info, campaigns, adsets, ads, daily,
     if daily:
         section_elements = []
         section_elements.append(Paragraph('Daily Spend &amp; Performance', styles['SectionHead']))
-        daily_has_leads = any(extract_leads(d) > 0 for d in daily)
 
-        if daily_has_leads:
-            daily_header = ['Date', 'Spend', 'Impressions', 'Link Clicks', 'Leads', 'CTR', 'CPC (Link)']
-            daily_rows = [daily_header]
-            for d in sorted(daily, key=lambda x: x.get('date_start', '')):
-                lc = extract_link_clicks(d)
-                leads = extract_leads(d)
-                daily_rows.append([
-                    d.get('date_start', 'N/A'),
-                    fmt_money(d.get('spend', 0)),
-                    fmt_number(d.get('impressions', 0)),
-                    fmt_number(lc),
-                    fmt_number(leads) if leads else '—',
-                    fmt_pct(d.get('ctr', 0)),
-                    fmt_money(calc_link_cpc(d)),
-                ])
-            daily_col_widths = [(USABLE_WIDTH - 4.85*inch), 0.75*inch, 1.0*inch, 0.85*inch, 0.55*inch, 0.65*inch, 0.75*inch]
-        else:
-            daily_header = ['Date', 'Spend', 'Impressions', 'Link Clicks', 'CTR', 'CPC (Link)']
-            daily_rows = [daily_header]
-            for d in sorted(daily, key=lambda x: x.get('date_start', '')):
-                lc = extract_link_clicks(d)
-                daily_rows.append([
-                    d.get('date_start', 'N/A'),
-                    fmt_money(d.get('spend', 0)),
-                    fmt_number(d.get('impressions', 0)),
-                    fmt_number(lc),
-                    fmt_pct(d.get('ctr', 0)),
-                    fmt_money(calc_link_cpc(d)),
-                ])
-            daily_col_widths = [(USABLE_WIDTH - 4.2*inch), 0.8*inch, 1.1*inch, 0.9*inch, 0.7*inch, 0.7*inch]
+        daily_rows, daily_col_widths = profile.daily_table(daily, USABLE_WIDTH)
         daily_table = Table(daily_rows, colWidths=daily_col_widths, repeatRows=1)
         daily_table.setStyle(make_table_style())
         section_elements.append(daily_table)
@@ -1935,10 +1650,28 @@ def build_pdf(output_path, days, account_info, campaigns, adsets, ads, daily,
 # ---------------------------------------------------------------------------
 
 def main():
-    parser = argparse.ArgumentParser(description='Generate AstroPaws ad performance report')
+    parser = argparse.ArgumentParser(
+        description='Generate a Meta ad performance report for any client. '
+                    'One shared script — each client supplies a .env in its project folder.'
+    )
+    parser.add_argument('--client', required=True,
+                        help='Client project folder (under the repo root) or an absolute '
+                             'path to it, e.g. "INKtentions". Must contain a .env.')
     parser.add_argument('--days', type=int, default=7, help='Number of days to report on (default: 7)')
-    parser.add_argument('--output', type=str, default=None, help='Output PDF path')
+    parser.add_argument('--output', type=str, default=None, help='Output PDF path (default: <client>/reports/...)')
     args = parser.parse_args()
+
+    # Resolve the client folder relative to the repo root (parent of this reporting/ dir).
+    repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    client_dir = args.client if os.path.isabs(args.client) else os.path.join(repo_root, args.client)
+    if not os.path.isdir(client_dir):
+        parser.error(f'Client folder not found: {client_dir}')
+    if not os.path.isfile(os.path.join(client_dir, '.env')):
+        parser.error(f'No .env found in client folder: {client_dir}')
+
+    configure_client(client_dir)
+    if not TOKEN or not ACCOUNT_ID:
+        parser.error(f'{args.client}/.env is missing META_ACCESS_TOKEN or META_AD_ACCOUNT_ID')
 
     if args.days <= 7:
         date_preset = 'last_7d'
@@ -1952,11 +1685,13 @@ def main():
     if not args.output:
         today_str = datetime.now().strftime('%Y-%m-%d')
         args.output = os.path.join(
-            os.path.dirname(__file__), '..', 'reports',
+            client_dir, 'reports',
             f'{CLIENT_NAME.lower().replace(" ", "-")}-report-{today_str}.pdf'
         )
 
     os.makedirs(os.path.dirname(args.output), exist_ok=True)
+
+    print(f'Client: {CLIENT_NAME}  ({args.client})')
 
     print(f'Fetching data for last {args.days} days...')
     account_info = fetch_account_info()
