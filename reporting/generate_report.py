@@ -39,6 +39,26 @@ WHITE = HexColor('#ffffff')
 BEST_ROW = HexColor('#e6f9f0')
 WORST_ROW = HexColor('#fde8e8')
 
+# Best/worst row highlighting ignores rows that spent too little to be
+# statistically reliable: a row must have spent at least MIN_RANK_SPEND AND
+# MIN_RANK_SPEND_FRAC of the table's total spend to be eligible for ranking.
+# Ineligible rows are greyed out and a footnote explains the threshold.
+MIN_RANK_SPEND = 10.00
+MIN_RANK_SPEND_FRAC = 0.025
+MUTED_ROW_BG = HexColor('#f0f0f0')
+MUTED_TEXT = HexColor('#a0a4a8')
+
+
+def rank_spend_threshold(rows):
+    """Minimum spend a row needs to be eligible for best/worst ranking."""
+    total = sum(float(r.get('spend', 0)) for r in rows)
+    return max(MIN_RANK_SPEND, MIN_RANK_SPEND_FRAC * total)
+
+
+def spend_rankable(spend, total_spend):
+    """True if this spend is a statistically reliable share of the total."""
+    return spend >= max(MIN_RANK_SPEND, MIN_RANK_SPEND_FRAC * total_spend)
+
 BASE = 'https://graph.facebook.com/v21.0'
 
 # Client config is populated by configure_client() once --client is resolved.
@@ -386,8 +406,10 @@ def generate_insights(campaigns, image_data, age_gender_data, platform_data,
             gender_segments[segment_key]['clicks'] += clicks
             gender_segments[segment_key]['link_clicks'] += lc
 
-        # Best age group by CPC (Link)
-        age_with_lc = {k: v for k, v in age_groups.items() if v['link_clicks'] > 0}
+        # Best age group by CPC (Link) — only among segments with reliable spend
+        total_age_spend = sum(v['spend'] for v in age_groups.values())
+        age_with_lc = {k: v for k, v in age_groups.items()
+                       if v['link_clicks'] > 0 and spend_rankable(v['spend'], total_age_spend)}
         if age_with_lc:
             best_age_cpc = min(age_with_lc.items(), key=lambda x: x[1]['spend'] / x[1]['link_clicks'])
             age_cpc = best_age_cpc[1]['spend'] / best_age_cpc[1]['link_clicks']
@@ -397,8 +419,10 @@ def generate_insights(campaigns, image_data, age_gender_data, platform_data,
                 f'{fmt_money(age_cpc)} with {fmt_pct(age_ctr)} CTR.'
             )
 
-        # Best gender segment
-        gender_with_lc = {k: v for k, v in gender_segments.items() if v['link_clicks'] > 0}
+        # Best gender segment — only among segments with reliable spend
+        total_seg_spend = sum(v['spend'] for v in gender_segments.values())
+        gender_with_lc = {k: v for k, v in gender_segments.items()
+                          if v['link_clicks'] > 0 and spend_rankable(v['spend'], total_seg_spend)}
         if gender_with_lc:
             best_segment = min(gender_with_lc.items(), key=lambda x: x[1]['spend'] / x[1]['link_clicks'])
             seg_cpc = best_segment[1]['spend'] / best_segment[1]['link_clicks']
@@ -445,7 +469,9 @@ def generate_insights(campaigns, image_data, age_gender_data, platform_data,
             })
 
         if placements:
-            placements_with_lc = [p for p in placements if p['link_clicks'] > 0]
+            total_plac_spend = sum(p['spend'] for p in placements)
+            placements_with_lc = [p for p in placements
+                                  if p['link_clicks'] > 0 and spend_rankable(p['spend'], total_plac_spend)]
             if placements_with_lc:
                 best_placement = min(placements_with_lc, key=lambda x: x['spend'] / x['link_clicks'])
                 cost_per_lc = best_placement['spend'] / best_placement['link_clicks']
@@ -693,7 +719,9 @@ def generate_insights(campaigns, image_data, age_gender_data, platform_data,
                 segments[seg_key] = {'spend': 0, 'link_clicks': 0}
             segments[seg_key]['spend'] += spend
             segments[seg_key]['link_clicks'] += lc
-        segs_with_lc = {k: v for k, v in segments.items() if v['link_clicks'] > 0}
+        total_seg_spend = sum(v['spend'] for v in segments.values())
+        segs_with_lc = {k: v for k, v in segments.items()
+                        if v['link_clicks'] > 0 and spend_rankable(v['spend'], total_seg_spend)}
         if len(segs_with_lc) >= 2:
             cpcs = {k: v['spend'] / v['link_clicks'] for k, v in segs_with_lc.items()}
             best_seg = min(cpcs, key=cpcs.get)
@@ -822,24 +850,79 @@ def color_code_table(style, data_rows, metric_col_index, mode='ctr'):
 
     Only applies if there are 3+ data rows (with only 2 rows, the contrast
     is obvious enough).
+
+    Rows with too little spend are ineligible for best/worst — their metrics
+    aren't statistically reliable. A row must have spent at least MIN_RANK_SPEND
+    ($10) AND at least MIN_RANK_SPEND_FRAC (2.5%) of the table's total spend.
     """
     if len(data_rows) < 3:
         return
 
+    total_spend = sum(float(r.get('spend', 0)) for r in data_rows)
+    min_spend = max(MIN_RANK_SPEND, MIN_RANK_SPEND_FRAC * total_spend)
+    eligible = [i for i, r in enumerate(data_rows) if float(r.get('spend', 0)) >= min_spend]
+    if len(eligible) < 2:
+        return  # not enough reliable rows to crown a best and a worst
+
     if mode == 'ctr':
-        values = [float(row.get('ctr', 0)) for row in data_rows]
-        best_idx = max(range(len(values)), key=lambda i: values[i])
-        worst_idx = min(range(len(values)), key=lambda i: values[i])
+        # Rank by link CTR to match the displayed value (higher is better)
+        values = {i: calc_link_ctr(data_rows[i]) for i in eligible}
+        best_idx = max(eligible, key=lambda i: values[i])
+        worst_idx = min(eligible, key=lambda i: values[i])
     elif mode == 'cpc':
-        values = [calc_link_cpc(row) if calc_link_cpc(row) > 0 else 999 for row in data_rows]
-        best_idx = min(range(len(values)), key=lambda i: values[i])
-        worst_idx = max(range(len(values)), key=lambda i: values[i])
+        values = {i: (calc_link_cpc(data_rows[i]) or 999) for i in eligible}
+        best_idx = min(eligible, key=lambda i: values[i])
+        worst_idx = max(eligible, key=lambda i: values[i])
     else:
         return
 
     # +1 offset accounts for the header row at index 0
     style.add('BACKGROUND', (0, best_idx + 1), (-1, best_idx + 1), BEST_ROW)
     style.add('BACKGROUND', (0, worst_idx + 1), (-1, worst_idx + 1), WORST_ROW)
+
+
+def mute_low_data_rows(style, rows, data_rows, styles):
+    """Grey out rows that spent too little to be statistically reliable.
+
+    Mutates `rows` in place (recolors Paragraph cells to a muted style) and adds
+    TableStyle commands for the plain string cells. Returns (min_spend, count).
+    """
+    min_spend = rank_spend_threshold(data_rows)
+    muted = 0
+    for i, r in enumerate(data_rows):
+        if float(r.get('spend', 0)) >= min_spend:
+            continue
+        muted += 1
+        rr = i + 1  # +1 for the header row
+        style.add('BACKGROUND', (0, rr), (-1, rr), MUTED_ROW_BG)
+        style.add('TEXTCOLOR', (0, rr), (-1, rr), MUTED_TEXT)
+        for j, cell in enumerate(rows[rr]):
+            if isinstance(cell, Paragraph):
+                rows[rr][j] = Paragraph(cell.text, styles['TableCellMuted'])
+    return min_spend, muted
+
+
+def finalize_ranked_table(rows, data_rows, col_widths, mode, styles,
+                          row_heights=None, extra_style=None):
+    """Build a table that highlights best/worst rows: grey out low-spend rows,
+    color best/worst among the reliable ones, and return (table, footnote|None).
+    """
+    style = make_table_style()
+    if extra_style:
+        for cmd in extra_style:
+            style.add(*cmd)
+    min_spend, muted = mute_low_data_rows(style, rows, data_rows, styles)
+    color_code_table(style, data_rows, metric_col_index=0, mode=mode)
+    table = Table(rows, colWidths=col_widths, repeatRows=1, rowHeights=row_heights)
+    table.setStyle(style)
+    footnote = None
+    if muted:
+        footnote = Paragraph(
+            f'Greyed rows spent under {fmt_money(min_spend)} '
+            f'({fmt_money(MIN_RANK_SPEND)} minimum, or {MIN_RANK_SPEND_FRAC * 100:.1f}% of table spend) '
+            f'and are excluded from best/worst highlighting — too little data to be statistically reliable.',
+            styles['TableFootnote'])
+    return table, footnote
 
 
 # ---------------------------------------------------------------------------
@@ -878,6 +961,10 @@ def build_pdf(output_path, days, account_info, campaigns, adsets, ads, daily,
                                textColor=WHITE))
     styles.add(ParagraphStyle('TableCell', fontSize=9, fontName='Helvetica',
                                textColor=BRAND_DARK))
+    styles.add(ParagraphStyle('TableCellMuted', fontSize=9, fontName='Helvetica',
+                               textColor=MUTED_TEXT))
+    styles.add(ParagraphStyle('TableFootnote', fontSize=7.5, fontName='Helvetica-Oblique',
+                               textColor=BRAND_GRAY, leading=10, spaceBefore=3))
     styles.add(ParagraphStyle('Footer', fontSize=8, fontName='Helvetica',
                                textColor=BRAND_GRAY, alignment=TA_CENTER))
 
@@ -1149,7 +1236,9 @@ def build_pdf(output_path, days, account_info, campaigns, adsets, ads, daily,
                 segments[seg_key] = {'spend': 0, 'link_clicks': 0}
             segments[seg_key]['spend'] += spend
             segments[seg_key]['link_clicks'] += lc
-        segs_with_lc = {k: v for k, v in segments.items() if v['link_clicks'] > 0}
+        total_seg_spend = sum(v['spend'] for v in segments.values())
+        segs_with_lc = {k: v for k, v in segments.items()
+                        if v['link_clicks'] > 0 and spend_rankable(v['spend'], total_seg_spend)}
         if segs_with_lc:
             best_seg_key = min(segs_with_lc, key=lambda k: segs_with_lc[k]['spend'] / segs_with_lc[k]['link_clicks'])
             best_seg_cpc = segs_with_lc[best_seg_key]['spend'] / segs_with_lc[best_seg_key]['link_clicks']
@@ -1221,21 +1310,33 @@ def build_pdf(output_path, days, account_info, campaigns, adsets, ads, daily,
     ]
     metrics_data += profile.summary_cells(totals, metric_cell)
 
-    metric_table_data = [
-        [m[0] for m in metrics_data],
-        [m[1] for m in metrics_data],
-    ]
+    # Lay out metrics in rows of at most 6 columns so cells stay wide enough to
+    # avoid mid-word wrapping. The Sales layout has 10 metrics -> 6 + 4.
+    MAX_COLS = 6
+    ncols = min(len(metrics_data), MAX_COLS)
+    chunks = [metrics_data[i:i + MAX_COLS] for i in range(0, len(metrics_data), MAX_COLS)]
+    metric_table_data = []
+    for chunk in chunks:
+        pad = ncols - len(chunk)
+        metric_table_data.append([m[0] for m in chunk] + [''] * pad)  # labels row
+        metric_table_data.append([m[1] for m in chunk] + [''] * pad)  # values row
 
-    metric_col_widths = [USABLE_WIDTH / len(metrics_data)] * len(metrics_data)
-    metric_table = Table(metric_table_data, colWidths=metric_col_widths)
-    metric_table.setStyle(TableStyle([
+    metric_col_widths = [USABLE_WIDTH / ncols] * ncols
+    metric_style = [
         ('BACKGROUND', (0, 0), (-1, -1), BRAND_LIGHT),
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
         ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('TOPPADDING', (0, 0), (-1, -1), 6),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 6),
         ('TOPPADDING', (0, 0), (-1, 0), 8),
         ('BOTTOMPADDING', (0, -1), (-1, -1), 10),
         ('ROUNDEDCORNERS', [6, 6, 6, 6]),
-    ]))
+    ]
+    # Extra separation above each wrapped row-group (2nd chunk onward).
+    for ci in range(1, len(chunks)):
+        metric_style.append(('TOPPADDING', (0, ci * 2), (-1, ci * 2), 16))
+    metric_table = Table(metric_table_data, colWidths=metric_col_widths)
+    metric_table.setStyle(TableStyle(metric_style))
     story.append(metric_table)
     story.append(Spacer(1, 12))
 
@@ -1246,11 +1347,10 @@ def build_pdf(output_path, days, account_info, campaigns, adsets, ads, daily,
     section_elements.append(Paragraph('Campaign Performance', styles['SectionHead']))
 
     camp_rows, camp_col_widths = profile.campaign_table(campaigns, styles, USABLE_WIDTH)
-    camp_table = Table(camp_rows, colWidths=camp_col_widths, repeatRows=1)
-    camp_style = make_table_style()
-    color_code_table(camp_style, campaigns, metric_col_index=0, mode='cpc')
-    camp_table.setStyle(camp_style)
+    camp_table, camp_foot = finalize_ranked_table(camp_rows, campaigns, camp_col_widths, 'cpc', styles)
     section_elements.append(camp_table)
+    if camp_foot:
+        section_elements.append(camp_foot)
     section_elements.append(Spacer(1, 12))
     story.append(KeepTogether(section_elements))
 
@@ -1280,13 +1380,13 @@ def build_pdf(output_path, days, account_info, campaigns, adsets, ads, daily,
             ])
 
         img_col_widths = [1.2*inch, (USABLE_WIDTH - 1.2*inch - 3.15*inch), 0.75*inch, 0.9*inch, 0.75*inch, 0.75*inch]
-        img_table = Table(img_rows, colWidths=img_col_widths, repeatRows=1,
-                          rowHeights=[None] + [100] * (len(img_rows) - 1))
-        img_style = make_table_style()
-        img_style.add('VALIGN', (0, 1), (0, -1), 'MIDDLE')
-        color_code_table(img_style, image_data, metric_col_index=4, mode='ctr')
-        img_table.setStyle(img_style)
+        img_table, img_foot = finalize_ranked_table(
+            img_rows, image_data, img_col_widths, 'ctr', styles,
+            row_heights=[None] + [100] * (len(img_rows) - 1),
+            extra_style=[('VALIGN', (0, 1), (0, -1), 'MIDDLE')])
         section_elements.append(img_table)
+        if img_foot:
+            section_elements.append(img_foot)
         section_elements.append(Spacer(1, 12))
         story.append(KeepTogether(section_elements))
 
@@ -1316,13 +1416,13 @@ def build_pdf(output_path, days, account_info, campaigns, adsets, ads, daily,
             ])
 
         cr_col_widths = [1.2*inch, (USABLE_WIDTH - 1.2*inch - 4.1*inch), 1.2*inch, 0.7*inch, 0.8*inch, 0.65*inch, 0.75*inch]
-        cr_table = Table(cr_rows, colWidths=cr_col_widths, repeatRows=1,
-                         rowHeights=[None] + [100] * (len(cr_rows) - 1))
-        cr_style = make_table_style()
-        cr_style.add('VALIGN', (0, 1), (0, -1), 'MIDDLE')
-        color_code_table(cr_style, ads, metric_col_index=5, mode='ctr')
-        cr_table.setStyle(cr_style)
+        cr_table, cr_foot = finalize_ranked_table(
+            cr_rows, ads, cr_col_widths, 'ctr', styles,
+            row_heights=[None] + [100] * (len(cr_rows) - 1),
+            extra_style=[('VALIGN', (0, 1), (0, -1), 'MIDDLE')])
         section_elements.append(cr_table)
+        if cr_foot:
+            section_elements.append(cr_foot)
         section_elements.append(Spacer(1, 12))
         story.append(KeepTogether(section_elements))
 
@@ -1350,11 +1450,10 @@ def build_pdf(output_path, days, account_info, campaigns, adsets, ads, daily,
 
             # 5 cols: others = 0.8+0.9+0.7+0.7 = 3.1; first absorbs rest
             title_col_widths = [(USABLE_WIDTH - 3.1*inch), 0.8*inch, 0.9*inch, 0.7*inch, 0.7*inch]
-            title_table = Table(title_rows, colWidths=title_col_widths, repeatRows=1)
-            title_style = make_table_style()
-            color_code_table(title_style, filtered_titles, metric_col_index=3, mode='ctr')
-            title_table.setStyle(title_style)
+            title_table, title_foot = finalize_ranked_table(title_rows, filtered_titles, title_col_widths, 'ctr', styles)
             section_elements.append(title_table)
+            if title_foot:
+                section_elements.append(title_foot)
             section_elements.append(Spacer(1, 12))
             story.append(KeepTogether(section_elements))
 
@@ -1382,11 +1481,10 @@ def build_pdf(output_path, days, account_info, campaigns, adsets, ads, daily,
 
             # 5 cols: others = 0.8+0.9+0.7+0.7 = 3.1; first absorbs rest
             body_col_widths = [(USABLE_WIDTH - 3.1*inch), 0.8*inch, 0.9*inch, 0.7*inch, 0.7*inch]
-            body_table = Table(body_rows, colWidths=body_col_widths, repeatRows=1)
-            body_style = make_table_style()
-            color_code_table(body_style, filtered_bodies, metric_col_index=3, mode='ctr')
-            body_table.setStyle(body_style)
+            body_table, body_foot = finalize_ranked_table(body_rows, filtered_bodies, body_col_widths, 'ctr', styles)
             section_elements.append(body_table)
+            if body_foot:
+                section_elements.append(body_foot)
             section_elements.append(Spacer(1, 12))
             story.append(KeepTogether(section_elements))
 
@@ -1414,11 +1512,10 @@ def build_pdf(output_path, days, account_info, campaigns, adsets, ads, daily,
 
             # 5 cols: others = 0.8+0.9+0.7+0.7 = 3.1; first absorbs rest
             desc_col_widths = [(USABLE_WIDTH - 3.1*inch), 0.8*inch, 0.9*inch, 0.7*inch, 0.7*inch]
-            desc_table = Table(desc_rows, colWidths=desc_col_widths, repeatRows=1)
-            desc_style = make_table_style()
-            color_code_table(desc_style, filtered_descs, metric_col_index=3, mode='ctr')
-            desc_table.setStyle(desc_style)
+            desc_table, desc_foot = finalize_ranked_table(desc_rows, filtered_descs, desc_col_widths, 'ctr', styles)
             section_elements.append(desc_table)
+            if desc_foot:
+                section_elements.append(desc_foot)
             section_elements.append(Spacer(1, 12))
             story.append(KeepTogether(section_elements))
 
@@ -1478,10 +1575,12 @@ def build_pdf(output_path, days, account_info, campaigns, adsets, ads, daily,
         age_table.setStyle(make_table_style())
         section_elements.append(age_table)
 
-        # Top gender segment note (exclude unknown, require min $2 spend)
+        # Top gender segment note (exclude unknown + statistically thin segments)
+        total_gender_spend = sum(v['spend'] for v in gender_agg.values())
         gender_with_lc = {
             k: v for k, v in gender_agg.items()
-            if v['link_clicks'] > 0 and k.lower() != 'unknown' and v['spend'] >= 2.0
+            if v['link_clicks'] > 0 and k.lower() != 'unknown'
+            and spend_rankable(v['spend'], total_gender_spend)
         }
         if gender_with_lc:
             best_seg = min(gender_with_lc.items(), key=lambda x: x[1]['spend'] / x[1]['link_clicks'])
@@ -1508,9 +1607,10 @@ def build_pdf(output_path, days, account_info, campaigns, adsets, ads, daily,
             section_elements = []
             section_elements.append(Paragraph('Platform &amp; Placement Performance', styles['SectionHead']))
 
+            sorted_placements = sorted(filtered_placements, key=lambda x: float(x.get('spend', 0)), reverse=True)
             plat_header = ['Platform / Placement', 'Spend', 'Impressions', 'Link Clicks', 'CTR', 'CPC (Link)']
             plat_rows = [plat_header]
-            for row in sorted(filtered_placements, key=lambda x: float(x.get('spend', 0)), reverse=True):
+            for row in sorted_placements:
                 lc = extract_link_clicks(row)
                 name = clean_placement_name(
                     row.get('publisher_platform', ''),
@@ -1527,12 +1627,10 @@ def build_pdf(output_path, days, account_info, campaigns, adsets, ads, daily,
 
             # 6 cols: others = 0.8+1.0+0.9+0.8+0.8 = 4.3; first absorbs rest
             plat_col_widths = [(USABLE_WIDTH - 4.3*inch), 0.8*inch, 1.0*inch, 0.9*inch, 0.8*inch, 0.8*inch]
-            plat_table = Table(plat_rows, colWidths=plat_col_widths, repeatRows=1)
-            sorted_placements = sorted(filtered_placements, key=lambda x: float(x.get('spend', 0)), reverse=True)
-            plat_style = make_table_style()
-            color_code_table(plat_style, sorted_placements, metric_col_index=4, mode='ctr')
-            plat_table.setStyle(plat_style)
+            plat_table, plat_foot = finalize_ranked_table(plat_rows, sorted_placements, plat_col_widths, 'ctr', styles)
             section_elements.append(plat_table)
+            if plat_foot:
+                section_elements.append(plat_foot)
             section_elements.append(Spacer(1, 12))
             story.append(KeepTogether(section_elements))
 
