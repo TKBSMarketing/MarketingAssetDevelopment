@@ -59,7 +59,9 @@ def spend_rankable(spend, total_spend):
     """True if this spend is a statistically reliable share of the total."""
     return spend >= max(MIN_RANK_SPEND, MIN_RANK_SPEND_FRAC * total_spend)
 
-BASE = 'https://graph.facebook.com/v21.0'
+# Marketing API versions expire roughly a year after release (error 2635 when
+# stale). Bump to the current version from the Marketing API changelog.
+BASE = 'https://graph.facebook.com/v26.0'
 
 # Client config is populated by configure_client() once --client is resolved.
 # This single script serves every client; each client supplies only a .env.
