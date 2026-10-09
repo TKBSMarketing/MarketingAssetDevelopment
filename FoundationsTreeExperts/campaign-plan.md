@@ -38,6 +38,16 @@ At $450/month, run **two campaigns** — a primary lead gen campaign and a retar
 - Activate within hours of a severe weather event
 - Temporarily increase daily budget to $25-30/day during storm week (pull from Campaign 1)
 - Deactivate after 5-7 days
+- **Creative + copy:** `emergency-ad-copy.md` (S1-S3) and `ads/emergency/` — see the
+  activation playbook in that file for the flip-on/flip-off sequence
+
+### Campaign 4: 24/7 Emergency (Always-on, ~$2-3/day)
+- **Objective:** Leads · **CTA button: Call Now**, not Get Quote
+- Emergency intent converts on the phone, so every creative carries the number
+- Runs continuously — tree emergencies don't wait for storms
+- **Creative + copy:** `emergency-ad-copy.md` (E1-E4) and `ads/emergency/`
+- Judge this one on **calls, not clicks**. Lower CTR than lead gen is normal and fine.
+- Pause during a storm burst so it doesn't compete with Campaign 3 in the same auction
 
 ---
 
